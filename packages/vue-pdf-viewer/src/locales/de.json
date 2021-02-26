@@ -1,0 +1,11 @@
+{
+    "pdfViewer": {
+        "page": "Seite",
+        "scale": {
+            "auto": "Automatischer Zoom",
+            "pageActual": "Originalgröße",
+            "pageFit": "Seitengröße",
+            "pageWidth": "Seitenbreite"
+        }
+    }
+}

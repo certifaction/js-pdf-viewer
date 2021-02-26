@@ -5,7 +5,7 @@
         </div>
         <div class="controls">
             <div class="pages">
-                {{ _$t('verification.digitalTwin.pdfViewer.page') }}
+                {{ _$t('pdfViewer.page') }}
                 <span class="current">{{ currentPage }}</span> / <span class="total">{{ pageCount }}</span>
             </div>
             <div class="scale">
@@ -29,12 +29,12 @@
 
 <script>
 import { mdiMinus, mdiPlus } from '@mdi/js'
-// import pdfjsLib from '@certifaction/vue-pdf-viewer/dist/pdf/pdf.js'
+import { pdfjsLib } from '@certifaction/pdfjs'
 import pdfjsViewer from '../pdf/pdf_viewer'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
 import MDIcon from './MDIcon.vue'
 
-console.log(pdfjsViewer)
+console.log(pdfjsLib, pdfjsViewer)
 
 const MIN_SCALE = 0.1
 const MAX_SCALE = 10
@@ -48,10 +48,23 @@ export default {
         MDIcon
     },
     props: {
-        url: String,
-        cmapUrl: String
+        url: {
+            type: String,
+            required: true
+        },
+        pdfjsWorkerSrc: {
+            type: String,
+            required: false
+        },
+        pdfjsWorkerInstance: {
+            type: Object,
+            required: false
+        },
+        pdfjsCMapUrl: {
+            type: String,
+            required: true
+        }
     },
-    // inject: ['pdfjsWorkerSrc', 'pdfjsCMapUrl'],
     data() {
         return {
             mdiMinus,
@@ -59,10 +72,10 @@ export default {
             pdfViewer: null,
             pdfDocument: null,
             scaleOptions: [
-                { label: this._$t('verification.digitalTwin.pdfViewer.scale.auto'), value: 'auto' },
-                { label: this._$t('verification.digitalTwin.pdfViewer.scale.pageActual'), value: 'page-actual' },
-                { label: this._$t('verification.digitalTwin.pdfViewer.scale.pageFit'), value: 'page-fit' },
-                { label: this._$t('verification.digitalTwin.pdfViewer.scale.pageWidth'), value: 'page-width' },
+                { label: this._$t('pdfViewer.scale.auto'), value: 'auto' },
+                { label: this._$t('pdfViewer.scale.pageActual'), value: 'page-actual' },
+                { label: this._$t('pdfViewer.scale.pageFit'), value: 'page-fit' },
+                { label: this._$t('pdfViewer.scale.pageWidth'), value: 'page-width' },
                 { label: '50%', value: 0.5 },
                 { label: '75%', value: 0.75 },
                 { label: '100%', value: 1 },
@@ -116,7 +129,13 @@ export default {
         }
     },
     created() {
-        // pdfjsLib.GlobalWorkerOptions.workerSrc = this.pdfjsWorkerSrc
+        if (this.pdfjsWorkerInstance) {
+            pdfjsLib.GlobalWorkerOptions.workerPort = this.pdfjsWorkerInstance
+        } else if (this.pdfjsWorkerSrc) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = this.pdfjsWorkerSrc
+        } else {
+            throw new Error('PDFViewer: pdfjsWorkerSrc or pdfjsWorkerInstance needs to be defined.')
+        }
     },
     async mounted() {
         const eventBus = new pdfjsViewer.EventBus()
@@ -129,14 +148,14 @@ export default {
             this.pdfViewer.currentScaleValue = this.currentScale
         })
 
-        // const documentLoadingTask = pdfjsLib.getDocument({
-        //     url: this.url,
-        //     cMapUrl: this.pdfjsCMapUrl,
-        //     cMapPacked: true
-        // })
-        // this.pdfDocument = await documentLoadingTask.promise
-        //
-        // this.pdfViewer.setDocument(this.pdfDocument)
+        const documentLoadingTask = pdfjsLib.getDocument({
+            url: this.url,
+            cMapUrl: this.pdfjsCMapUrl,
+            cMapPacked: true
+        })
+        this.pdfDocument = await documentLoadingTask.promise
+
+        this.pdfViewer.setDocument(this.pdfDocument)
     }
 }
 </script>
