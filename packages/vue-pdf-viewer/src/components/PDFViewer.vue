@@ -55,7 +55,7 @@ export default {
             required: false
         },
         pdfjsWorkerInstance: {
-            type: [Function, Object],
+            type: Worker,
             required: false
         },
         pdfjsCMapUrl: {
