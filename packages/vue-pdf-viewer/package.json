@@ -2,7 +2,7 @@
     "name": "@certifaction/vue-pdf-viewer",
     "version": "0.0.2",
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
-    "private": true,
+    "private": false,
     "license": "MIT",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com"
@@ -10,7 +10,7 @@
     "homepage": "https://certifaction.com",
     "repository": {
         "type": "git",
-        "url": "git@github.com:certifaction/js-pdf-viewer.git",
+        "url": "https://github.com/certifaction/js-pdf-viewer.git",
         "directory": "packages/vue-pdf-viewer"
     },
     "main": "dist/certifaction-vue-pdf-viewer.common.js",
