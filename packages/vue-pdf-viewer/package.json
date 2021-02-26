@@ -4,9 +4,6 @@
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
     "private": false,
     "license": "MIT",
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
-    },
     "homepage": "https://certifaction.com",
     "repository": {
         "type": "git",
