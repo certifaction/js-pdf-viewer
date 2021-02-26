@@ -3,6 +3,9 @@
     "version": "0.0.6",
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
     "private": false,
+    "publishConfig": {
+        "access": "public"
+    },
     "license": "MIT",
     "homepage": "https://certifaction.com",
     "repository": {
@@ -64,5 +67,6 @@
         "sass": "^1.32.8",
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.12"
-    }
+    },
+    "gitHead": "f5455b748987733baa977142c6b21111fcfa6029"
 }

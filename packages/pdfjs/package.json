@@ -3,6 +3,9 @@
     "version": "0.0.6",
     "description": "Convert Mozillas PDF.js to an ES6 module and transform CSS.",
     "private": false,
+    "publishConfig": {
+        "access": "public"
+    },
     "license": "MIT",
     "homepage": "https://certifaction.com",
     "repository": {
@@ -44,5 +47,6 @@
         "rollup": "^2.40.0",
         "rollup-plugin-copy": "^3.4.0",
         "rollup-plugin-ignore": "^1.0.9"
-    }
+    },
+    "gitHead": "f5455b748987733baa977142c6b21111fcfa6029"
 }
