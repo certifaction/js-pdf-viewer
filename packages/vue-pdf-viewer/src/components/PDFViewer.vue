@@ -34,8 +34,6 @@ import pdfjsViewer from '../pdf/pdf_viewer'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
 import MDIcon from './MDIcon.vue'
 
-console.log(pdfjsLib, pdfjsViewer)
-
 const MIN_SCALE = 0.1
 const MAX_SCALE = 10
 
@@ -57,7 +55,7 @@ export default {
             required: false
         },
         pdfjsWorkerInstance: {
-            type: Object,
+            type: [Function, Object],
             required: false
         },
         pdfjsCMapUrl: {
