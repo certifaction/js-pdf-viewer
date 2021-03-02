@@ -1,7 +1,10 @@
-// COLORS
+// Assets
+$pdf-viewer-asset-base-path: "" !default;
+
+// Colors
 $dark-gray: #343435 !default;
 
-// FONTS
+// Fonts
 $font-family-sans-serif:
     // Safari for OS X and iOS (San Francisco)
     -apple-system,
@@ -16,9 +19,3 @@ $font-family-sans-serif:
     // Emoji fonts
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 $font-size-normal: 1rem !default;
-
-$pdf-viewer-images-base-path: "" !default;
-
-@function image($file) {
-    @return url($pdf-viewer-images-base-path + $file);
-}
