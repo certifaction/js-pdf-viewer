@@ -16,3 +16,9 @@ $font-family-sans-serif:
     // Emoji fonts
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 $font-size-normal: 1rem !default;
+
+$pdf-viewer-images-base-path: "" !default;
+
+@function image($file) {
+    @return url($pdf-viewer-images-base-path + $file);
+}

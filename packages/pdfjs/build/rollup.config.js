@@ -47,9 +47,9 @@ export default [
                     {
                         src: '../../node_modules/pdfjs-dist/web/pdf_viewer.css',
                         dest: 'dist/',
-                        rename: (name) => `${name}_sass.scss`,
+                        rename: (name) => `${name}_scss.scss`,
                         transform: (content) => content.toString()
-                            .replaceAll('images/', '@certifaction/pdfjs/dist/images/')
+                            .replaceAll(/url\((.*)\)/ig, 'image($1)')
                             .replaceAll('.pdfViewer', '.viewer-container .viewer')
                     },
                     { src: '../../node_modules/pdfjs-dist/web/images', dest: 'dist/' },
