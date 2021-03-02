@@ -1,5 +1,4 @@
 import vue from 'rollup-plugin-vue'
-// import image from '@rollup/plugin-image'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { babel } from '@rollup/plugin-babel'
@@ -17,7 +16,6 @@ const plugins = [
     vue({
         css: false
     }),
-    // image(),
     commonjs(),
     resolve({
         browser: true,
@@ -38,19 +36,17 @@ const defaultConfig = {
     external: externals.filter(dep => !externalExcludes.includes(dep))
 }
 
-console.log(defaultConfig.external)
-
 export default [
     {
         ...defaultConfig,
         input: 'src/index.js',
         output: [
-            // {
-            //     format: 'cjs',
-            //     file: pkg.main,
-            //     exports: 'named',
-            //     sourcemap
-            // },
+            {
+                format: 'cjs',
+                file: pkg.main,
+                exports: 'named',
+                sourcemap
+            },
             {
                 format: 'es',
                 file: pkg.module,

@@ -1,4 +1,3 @@
-// import ignore from 'rollup-plugin-ignore'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import copy from 'rollup-plugin-copy'
@@ -23,14 +22,12 @@ export default [
             }
         ],
         plugins: [
-            // ignore(['./pdf.worker.js']),
             commonjs(),
             resolve({
                 browser: true,
                 preferBuiltins: false
             }),
             copy({
-                verbose: true,
                 targets: [
                     {
                         src: [
@@ -50,7 +47,7 @@ export default [
                     {
                         src: '../../node_modules/pdfjs-dist/web/pdf_viewer.css',
                         dest: 'dist/',
-                        rename: (name) => `${name}.scss`,
+                        rename: (name) => `${name}_sass.scss`,
                         transform: (content) => content.toString()
                             .replaceAll('images/', '@certifaction/pdfjs/dist/images/')
                             .replaceAll('.pdfViewer', '.viewer-container .viewer')
