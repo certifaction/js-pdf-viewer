@@ -9,10 +9,10 @@
                 <span class="current">{{ currentPage }}</span> / <span class="total">{{ pageCount }}</span>
             </div>
             <div class="scale">
-                <button type="button" class="btn secondary" @click="decreaseScale">
+                <button type="button" class="btn" @click="decreaseScale">
                     <MDIcon :icon="mdiMinus"/>
                 </button>
-                <button type="button" class="btn secondary" @click="increaseScale">
+                <button type="button" class="btn" @click="increaseScale">
                     <MDIcon :icon="mdiPlus"/>
                 </button>
                 <select class="scale-selector" v-model="currentScale">
@@ -46,10 +46,6 @@ export default {
         MDIcon
     },
     props: {
-        url: {
-            type: String,
-            required: true
-        },
         pdfjsWorkerSrc: {
             type: String,
             required: false
@@ -59,6 +55,10 @@ export default {
             required: false
         },
         pdfjsCMapUrl: {
+            type: String,
+            required: true
+        },
+        url: {
             type: String,
             required: true
         }

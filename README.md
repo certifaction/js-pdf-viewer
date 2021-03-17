@@ -17,8 +17,8 @@ This monorepo contains these packages:
 
 | Project | Package | Version |
 |---|---|---|
-| Pdf.js ES6 Module | [@certifaction/pdfjs](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/pdfjs) | - |
-| Vue PDF-Viewer | [@certifaction/vue-pdf-viewer](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/vue-pdf-viewer) | - |
+| Pdf.js ES6 Module | [@certifaction/pdfjs](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/pdfjs) | [![latest](https://img.shields.io/npm/v/@certifaction/pdfjs/latest.svg)](https://npmjs.com/package/@certifaction/pdfjs) |
+| Vue.js PDF-Viewer | [@certifaction/vue-pdf-viewer](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/vue-pdf-viewer) | [![latest](https://img.shields.io/npm/v/@certifaction/vue-pdf-viewer/latest.svg)](https://npmjs.com/package/@certifaction/vue-pdf-viewer) |
 
 ## Development
 
@@ -26,14 +26,14 @@ This monorepo contains these packages:
 
 * [NodeJS](https://nodejs.org) >= 15
 * [Yarn](https://yarnpkg.com)
-* [Lerna](https://lerna.js.org/)
+* [Lerna](https://lerna.js.org)
 
 ### Getting started
 
 Clone the git repo and install dependencies.
 ```shell script
 git clone https://github.com/certifaction/js-pdf-viewer.git
-cd verification
+cd js-pdf-viewer
 lerna bootstrap
 ```
 
