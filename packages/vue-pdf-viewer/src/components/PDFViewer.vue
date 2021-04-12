@@ -61,6 +61,12 @@ export default {
         url: {
             type: String,
             required: true
+        },
+        pdfjsViewerOptions: {
+            type: Object,
+            default: function() {
+                return {}
+            }
         }
     },
     data() {
@@ -138,6 +144,7 @@ export default {
     async mounted() {
         const eventBus = new pdfjsViewer.EventBus()
         this.pdfViewer = new pdfjsViewer.PDFViewer({
+            ...this.pdfjsViewerOptions,
             container: this.$refs.viewerContainer,
             eventBus
         })
