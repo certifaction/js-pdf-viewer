@@ -30,30 +30,30 @@
     "dependencies": {
         "@certifaction/pdfjs": "^1.0.0",
         "@mdi/js": "^5.9.55",
-        "core-js": "^3.9.1"
+        "core-js": "^3.10.1"
     },
     "peerDependencies": {
         "vue": "^2.6",
         "vue-i18n": "^8.23"
     },
     "devDependencies": {
-        "@babel/core": "^7.13.10",
-        "@babel/preset-env": "^7.13.10",
+        "@babel/core": "^7.13.15",
+        "@babel/preset-env": "^7.13.15",
         "@rollup/plugin-babel": "^5.3.0",
-        "@rollup/plugin-commonjs": "^17.1.0",
-        "@rollup/plugin-node-resolve": "^11.2.0",
+        "@rollup/plugin-commonjs": "^18.0.0",
+        "@rollup/plugin-node-resolve": "^11.2.1",
         "autoprefixer": "^10.2.5",
         "babel-eslint": "^10.1.0",
-        "eslint": "^7.22.0",
+        "eslint": "^7.24.0",
         "eslint-config-standard": "^16.0.2",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-promise": "^4.3.1",
-        "eslint-plugin-vue": "^7.7.0",
+        "eslint-plugin-promise": "^5.1.0",
+        "eslint-plugin-vue": "^7.9.0",
         "glob": "^7.1.6",
         "npm-run-all": "^4.1.5",
         "rimraf": "^3.0.2",
-        "rollup": "^2.41.4",
+        "rollup": "^2.45.1",
         "rollup-plugin-vue": "^5.1.9",
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.12"

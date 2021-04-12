@@ -159,6 +159,15 @@ Type: `string` | Required: `true`
 
 URL of the PDF document which should be displayed.
 
+### pdfjsViewerOptions
+
+Type: `Object` | Required: `false` | Default: `{}`
+
+These options are passed to the constructor of PDFViewer.
+Possible options are the PDFViewerOptions from [https://github.com/mozilla/pdf.js/web/base_viewer.js](https://github.com/mozilla/pdf.js/blob/master/web/base_viewer.js).
+
+`container` and `eventBus` are always overridden by the component.
+
 ## License
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/certifaction/js-pdf-viewer/blob/master/LICENSE)
