@@ -1,5 +1,6 @@
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
+import { babel } from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
 import pkg from '../package.json'
 
@@ -26,6 +27,12 @@ export default [
             resolve({
                 browser: true,
                 preferBuiltins: false
+            }),
+            babel({
+                babelHelpers: 'bundled',
+                exclude: [
+                    '../../node_modules/core-js/**'
+                ]
             }),
             copy({
                 targets: [
