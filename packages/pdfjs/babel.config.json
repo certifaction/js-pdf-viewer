@@ -4,9 +4,10 @@
             "@babel/env",
             {
                 "useBuiltIns": "usage",
-                "corejs": "3.10"
+                "corejs": "3.13"
             }
         ]
     ],
+    "plugins": ["@babel/plugin-proposal-nullish-coalescing-operator"],
     "comments": false
 }
