@@ -169,6 +169,18 @@ export default {
         const documentLoadingTask = pdfjsLib.getDocument(docOptions)
         this.pdfDocument = await documentLoadingTask.promise
 
+        eventBus.on('documentloaded', function() {
+            const event = document.createEvent('Event')
+            event.initEvent('PDFViewer:documentLoaded', true, true)
+            window.dispatchEvent(event)
+        })
+
+        eventBus.on('pagesloaded', function() {
+            const event = document.createEvent('Event')
+            event.initEvent('PDFViewer:pagesLoaded', true, true)
+            window.dispatchEvent(event)
+        })
+
         this.pdfViewer.setDocument(this.pdfDocument)
     }
 }
