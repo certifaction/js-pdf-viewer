@@ -24,9 +24,7 @@ This monorepo contains these packages:
 
 ### Requirements
 
-* [NodeJS](https://nodejs.org) >= 15
-* [Yarn](https://yarnpkg.com)
-* [Lerna](https://lerna.js.org)
+* [NodeJS](https://nodejs.org) >= 18
 
 ### Getting started
 
@@ -34,17 +32,18 @@ Clone the git repo and install dependencies.
 ```shell script
 git clone https://github.com/certifaction/js-pdf-viewer.git
 cd js-pdf-viewer
-lerna bootstrap
+npm install
+npm run bootstrap
 ```
 
 Check and fix linting errors
 ```shell script
-lerna run lint
+npm run lint
 ```
 
 Build libraries
 ```shell script
-lerna run build
+npm run build
 ```
 
 ### Publishing
@@ -52,8 +51,8 @@ lerna run build
 To publish a new version please commit your changes to master and then execute
 
 ```shell script
-lerna run build
-lerna publish
+npm run build
+npm run publish
 ```
 
 This will start the wizard to publish a new version.
