@@ -58,9 +58,11 @@ export default {
             type: String,
             required: true
         },
-        url: {
-            type: String,
-            required: true
+        source: {
+            required: true,
+            validator: (value) => {
+                return !!value && (typeof value === 'string' || value instanceof Uint8Array)
+            }
         },
         pdfjsViewerOptions: {
             type: Object,
@@ -153,12 +155,27 @@ export default {
             this.pdfViewer.currentScaleValue = this.currentScale
         })
 
-        const documentLoadingTask = pdfjsLib.getDocument({
-            url: this.url,
+        const docOptions = {
             cMapUrl: this.pdfjsCMapUrl,
             cMapPacked: true
-        })
+        }
+
+        if (this.source instanceof Uint8Array) {
+            docOptions.data = this.source
+        } else {
+            docOptions.url = this.source
+        }
+
+        const documentLoadingTask = pdfjsLib.getDocument(docOptions)
         this.pdfDocument = await documentLoadingTask.promise
+
+        const event = new Event('PDFViewer:documentLoaded')
+        window.dispatchEvent(event)
+
+        eventBus.on('pagesloaded', function() {
+            const event = new Event('PDFViewer:pagesLoaded')
+            window.dispatchEvent(event)
+        })
 
         this.pdfViewer.setDocument(this.pdfDocument)
     }
