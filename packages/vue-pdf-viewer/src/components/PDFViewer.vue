@@ -61,7 +61,7 @@ export default {
         source: {
             required: true,
             validator: (value) => {
-                return !!value && (typeof value === 'string' || value.constructor === Uint8Array)
+                return !!value && (typeof value === 'string' || value instanceof Uint8Array)
             }
         },
         pdfjsViewerOptions: {
@@ -160,7 +160,7 @@ export default {
             cMapPacked: true
         }
 
-        if (this.source.constructor === Uint8Array) {
+        if (this.source instanceof Uint8Array) {
             docOptions.data = this.source
         } else {
             docOptions.url = this.source
@@ -169,15 +169,11 @@ export default {
         const documentLoadingTask = pdfjsLib.getDocument(docOptions)
         this.pdfDocument = await documentLoadingTask.promise
 
-        eventBus.on('documentloaded', function() {
-            const event = document.createEvent('Event')
-            event.initEvent('PDFViewer:documentLoaded', true, true)
-            window.dispatchEvent(event)
-        })
+        const event = new Event('PDFViewer:documentLoaded')
+        window.dispatchEvent(event)
 
         eventBus.on('pagesloaded', function() {
-            const event = document.createEvent('Event')
-            event.initEvent('PDFViewer:pagesLoaded', true, true)
+            const event = new Event('PDFViewer:pagesLoaded')
             window.dispatchEvent(event)
         })
 
