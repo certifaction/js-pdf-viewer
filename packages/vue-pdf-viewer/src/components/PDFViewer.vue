@@ -106,6 +106,8 @@ export default {
     watch: {
         currentScale() {
             this.pdfViewer.currentScaleValue = this.currentScale
+            const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.currentScale });
+            window.dispatchEvent(event);
         }
     },
     methods: {
