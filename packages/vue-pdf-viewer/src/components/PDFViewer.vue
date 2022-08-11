@@ -69,6 +69,17 @@ export default {
             default: function() {
                 return {}
             }
+        },
+        defaultScale: {
+            required: false,
+            validator: (value) => {
+                if (typeof value === 'string') {
+                    return !!value && ['auto', 'page-actual', 'page-fit', 'page-width'].includes(value)
+                } else {
+                    return !!value && typeof value === 'number'
+                }
+            },
+            default: 'auto'
         }
     },
     data() {
@@ -91,7 +102,7 @@ export default {
                 { label: '300%', value: 3 },
                 { label: '400%', value: 4 }
             ],
-            currentScale: 'auto',
+            currentScale: null,
             customScale: { label: '', value: 0 }
         }
     },
@@ -104,10 +115,12 @@ export default {
         }
     },
     watch: {
-        currentScale() {
-            this.pdfViewer.currentScaleValue = this.currentScale
-            const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
-            window.dispatchEvent(event)
+        currentScale(newVal, oldVal) {
+            if (oldVal) {
+                this.pdfViewer.currentScaleValue = this.currentScale
+                const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
+                window.dispatchEvent(event)
+            }
         }
     },
     methods: {
@@ -154,6 +167,10 @@ export default {
         })
 
         eventBus.on('pagesinit', () => {
+            if (this.defaultScale) {
+                this.currentScale = this.defaultScale
+            }
+
             this.pdfViewer.currentScaleValue = this.currentScale
         })
 
