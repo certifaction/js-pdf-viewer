@@ -183,7 +183,7 @@ export default {
         const event = new Event('PDFViewer:documentLoaded')
         window.dispatchEvent(event)
 
-        eventBus.on('pagesloaded', function() {
+        eventBus.on('pagesloaded', () => {
             this.pdfViewer.currentScaleValue = this.currentScale = this.defaultScale
 
             const event = new Event('PDFViewer:pagesLoaded')
