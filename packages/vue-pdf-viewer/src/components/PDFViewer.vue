@@ -166,14 +166,6 @@ export default {
             eventBus
         })
 
-        eventBus.on('pagesinit', () => {
-            if (this.defaultScale) {
-                this.currentScale = this.defaultScale
-            }
-
-            this.pdfViewer.currentScaleValue = this.currentScale
-        })
-
         const docOptions = {
             cMapUrl: this.pdfjsCMapUrl,
             cMapPacked: true
@@ -192,6 +184,8 @@ export default {
         window.dispatchEvent(event)
 
         eventBus.on('pagesloaded', function() {
+            this.pdfViewer.currentScaleValue = this.currentScale = this.defaultScale
+
             const event = new Event('PDFViewer:pagesLoaded')
             window.dispatchEvent(event)
         })
