@@ -153,11 +153,21 @@ chainWebpack: config => {
 }
 ```
 
-### url
+### source
 
-Type: `string` | Required: `true`
+Type: `string` or `Uint8Array` | Required: `true`
 
-URL of the PDF document which should be displayed.
+The URL of the PDF document as `string` or the PDF documents content as `Uint8Array` which should be displayed.
+
+### defaultScale
+
+Type: `string` or `number` | Required: `false` | Default: `'auto'`
+
+The PDF Viewer renders the pages initially with the defined defaulScale.
+
+Possible `number` values: Min = `0.1`, Max = `10`
+
+Possible `string` values: `'auto'`, `'page-actual',` `'page-fit'`, `'page-width'`
 
 ### pdfjsViewerOptions
 
