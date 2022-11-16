@@ -159,38 +159,43 @@ export default {
         }
     },
     async mounted() {
-        const eventBus = new pdfjsViewer.EventBus()
-        this.pdfViewer = new pdfjsViewer.PDFViewer({
-            ...this.pdfjsViewerOptions,
-            container: this.$refs.viewerContainer,
-            eventBus
-        })
+        try {
+            const eventBus = new pdfjsViewer.EventBus()
+            this.pdfViewer = new pdfjsViewer.PDFViewer({
+                ...this.pdfjsViewerOptions,
+                container: this.$refs.viewerContainer,
+                eventBus
+            })
 
-        const docOptions = {
-            cMapUrl: this.pdfjsCMapUrl,
-            cMapPacked: true
-        }
+            const docOptions = {
+                cMapUrl: this.pdfjsCMapUrl,
+                cMapPacked: true
+            }
 
-        if (this.source instanceof Uint8Array) {
-            docOptions.data = this.source
-        } else {
-            docOptions.url = this.source
-        }
+            if (this.source instanceof Uint8Array) {
+                docOptions.data = this.source
+            } else {
+                docOptions.url = this.source
+            }
 
-        const documentLoadingTask = pdfjsLib.getDocument(docOptions)
-        this.pdfDocument = await documentLoadingTask.promise
+            const documentLoadingTask = pdfjsLib.getDocument(docOptions)
+            this.pdfDocument = await documentLoadingTask.promise
 
-        const event = new Event('PDFViewer:documentLoaded')
-        window.dispatchEvent(event)
-
-        eventBus.on('pagesloaded', () => {
-            this.pdfViewer.currentScaleValue = this.currentScale = this.defaultScale
-
-            const event = new Event('PDFViewer:pagesLoaded')
+            const event = new Event('PDFViewer:documentLoaded')
             window.dispatchEvent(event)
-        })
 
-        this.pdfViewer.setDocument(this.pdfDocument)
+            eventBus.on('pagesloaded', () => {
+                this.pdfViewer.currentScaleValue = this.currentScale = this.defaultScale
+
+                const event = new Event('PDFViewer:pagesLoaded')
+                window.dispatchEvent(event)
+            })
+
+            this.pdfViewer.setDocument(this.pdfDocument)
+        } catch (error) {
+            this.$emit('error', error)
+            throw error
+        }
     }
 }
 </script>
