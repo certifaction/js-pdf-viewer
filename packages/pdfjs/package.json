@@ -28,7 +28,7 @@
         "build": "npm-run-all clean build:js"
     },
     "dependencies": {
-        "core-js": "^3.17.3",
+        "core-js": "^3.26.1",
         "pdfjs-dist": "^2.16.105"
     },
     "devDependencies": {
