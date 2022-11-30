@@ -29,7 +29,7 @@
     },
     "dependencies": {
         "core-js": "^3.17.3",
-        "pdfjs-dist": "^2.9.359"
+        "pdfjs-dist": "^2.16.105"
     },
     "devDependencies": {
         "@babel/core": "^7.15.5",
@@ -42,10 +42,10 @@
         "eslint-config-standard": "^16.0.3",
         "eslint-plugin-import": "^2.24.2",
         "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-promise": "^5.1.0",
+        "eslint-plugin-promise": "^5.2.0",
         "npm-run-all": "^4.1.5",
         "rimraf": "^3.0.2",
-        "rollup": "^2.56.3",
+        "rollup": "^2.79.1",
         "rollup-plugin-copy": "^3.4.0"
     },
     "gitHead": "f5455b748987733baa977142c6b21111fcfa6029"

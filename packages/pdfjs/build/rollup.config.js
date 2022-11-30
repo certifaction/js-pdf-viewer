@@ -56,7 +56,7 @@ export default [
                         dest: 'dist/',
                         rename: (name) => `${name}_scss.scss`,
                         transform: (content) => content.toString()
-                            .replaceAll(/url\("?([^)"]*)"?\)/ig, 'pdf-viewer-asset("$1")')
+                            .replaceAll(/url\("?((?!data:)[^)"]*)"?\)/ig, 'pdf-viewer-asset("$1")')
                             .replaceAll('.pdfViewer', '.viewer-container .viewer')
                     },
                     { src: '../../node_modules/pdfjs-dist/web/images', dest: 'dist/' },
