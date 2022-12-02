@@ -29,7 +29,7 @@
     },
     "dependencies": {
         "core-js": "^3.26.1",
-        "pdfjs-dist": "^2.16.105"
+        "pdfjs-dist": "^v3.1.81"
     },
     "devDependencies": {
         "@babel/core": "^7.15.5",
