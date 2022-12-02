@@ -10,7 +10,7 @@
         "publish": "lerna publish"
     },
     "devDependencies": {
-        "lerna": "^5.6.2"
+        "lerna": "^6.1.0"
     },
     "volta": {
         "node": "18.7.0"
