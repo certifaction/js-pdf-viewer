@@ -28,24 +28,24 @@
         "build": "npm-run-all clean build:js"
     },
     "dependencies": {
-        "core-js": "^3.17.3",
-        "pdfjs-dist": "^2.9.359"
+        "core-js": "^3.26.1",
+        "pdfjs-dist": "^v3.1.81"
     },
     "devDependencies": {
-        "@babel/core": "^7.15.5",
-        "@babel/preset-env": "^7.15.6",
-        "@rollup/plugin-babel": "^5.3.0",
-        "@rollup/plugin-commonjs": "^20.0.0",
-        "@rollup/plugin-node-resolve": "^13.0.4",
+        "@babel/core": "^7.20.5",
+        "@babel/preset-env": "^7.20.2",
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-commonjs": "^23.0.3",
+        "@rollup/plugin-node-resolve": "^15.0.1",
         "babel-eslint": "^10.1.0",
-        "eslint": "^7.32.0",
-        "eslint-config-standard": "^16.0.3",
-        "eslint-plugin-import": "^2.24.2",
+        "eslint": "^8.28.0",
+        "eslint-config-standard": "^17.0.0",
+        "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-promise": "^5.1.0",
+        "eslint-plugin-promise": "^6.1.1",
         "npm-run-all": "^4.1.5",
         "rimraf": "^3.0.2",
-        "rollup": "^2.56.3",
+        "rollup": "^2.79.1",
         "rollup-plugin-copy": "^3.4.0"
     },
     "gitHead": "f5455b748987733baa977142c6b21111fcfa6029"
