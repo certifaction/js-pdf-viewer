@@ -50,14 +50,18 @@
         .scale {
             display: flex;
             align-items: center;
+        }
 
-            .btn {
-                padding: 6px 8px;
+        .btn {
+            padding: 6px 8px;
 
-                .md-icon {
-                    width: 20px;
-                    height: 20px;
-                }
+            &.download-button {
+                margin-left: 12px;
+            }
+
+            .md-icon {
+                width: 20px;
+                height: 20px;
             }
         }
 

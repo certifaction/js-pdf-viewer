@@ -23,12 +23,15 @@
                     <option :value="customScale.value" disabled class="hidden">{{ customScale.label }}</option>
                 </select>
             </div>
+            <button v-if="allowDocumentDownload" type="button" class="btn download-button" @click="downloadDocument">
+                <MDIcon :icon="mdiDownload"/>
+            </button>
         </div>
     </div>
 </template>
 
 <script>
-import { mdiMinus, mdiPlus } from '@mdi/js'
+import { mdiMinus, mdiPlus, mdiDownload } from '@mdi/js'
 import { pdfjsLib } from '@certifaction/pdfjs'
 import pdfjsViewer from '../pdf/pdf_viewer'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
@@ -80,12 +83,23 @@ export default {
                 }
             },
             default: 'auto'
+        },
+        documentName: {
+            type: String,
+            required: false,
+            default: 'pdf-viewer-document.pdf'
+        },
+        allowDocumentDownload: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     data() {
         return {
             mdiMinus,
             mdiPlus,
+            mdiDownload,
             pdfViewer: null,
             pdfDocument: null,
             scaleOptions: [
@@ -147,6 +161,18 @@ export default {
                 this.customScale.label = (this.currentScale * 100).toFixed(0) + '%'
                 this.customScale.value = this.currentScale
             }
+        },
+        downloadDocument() {
+            if (!this.allowDocumentDownload) {
+                return
+            }
+            const index = this.documentName.lastIndexOf(".pdf");
+            const editedDocumentName = this.documentName.substring(0,index) + "_PREVIEW" + this.documentName.substring(index);
+            if (this.source instanceof Uint8Array) {
+                this.pdfViewer.downloadManager.downloadData(this.source, editedDocumentName)
+            } else {
+                this.pdfViewer.downloadManager.downloadUrl(this.source, editedDocumentName)
+            }
         }
     },
     created() {
@@ -161,10 +187,12 @@ export default {
     async mounted() {
         try {
             const eventBus = new pdfjsViewer.EventBus()
+            const downloadManager = new pdfjsViewer.DownloadManager()
             this.pdfViewer = new pdfjsViewer.PDFViewer({
                 ...this.pdfjsViewerOptions,
                 container: this.$refs.viewerContainer,
-                eventBus
+                eventBus,
+                downloadManager
             })
 
             const docOptions = {
