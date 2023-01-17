@@ -162,16 +162,21 @@ export default {
                 this.customScale.value = this.currentScale
             }
         },
-        downloadDocument() {
+        async downloadDocument() {
             if (!this.allowDocumentDownload) {
                 return
             }
             const index = this.documentName.lastIndexOf(".pdf");
-            const editedDocumentName = this.documentName.substring(0,index) + "_PREVIEW" + this.documentName.substring(index);
+            const editedDocumentName = this.documentName.substring(0, index) + "_PREVIEW" + this.documentName.substring(index);
             if (this.source instanceof Uint8Array) {
                 this.pdfViewer.downloadManager.downloadData(this.source, editedDocumentName)
             } else {
-                this.pdfViewer.downloadManager.downloadUrl(this.source, editedDocumentName)
+                if (/^blob:/.test(this.source)) {
+                    let blob = await fetch(this.source).then(r => r.blob());
+                    this.pdfViewer.downloadManager.download(blob, this.source, editedDocumentName)
+                } else {
+                    this.pdfViewer.downloadManager.downloadUrl(this.source, editedDocumentName)
+                }
             }
         }
     },
