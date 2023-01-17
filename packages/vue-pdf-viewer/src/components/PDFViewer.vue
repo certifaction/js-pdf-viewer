@@ -166,14 +166,19 @@ export default {
             if (!this.allowDocumentDownload) {
                 return
             }
-            const index = this.documentName.lastIndexOf(".pdf");
-            const editedDocumentName = this.documentName.substring(0, index) + "_PREVIEW" + this.documentName.substring(index);
+            const index = this.documentName.lastIndexOf(".pdf")
+            const editedDocumentName = this.documentName.substring(0, index) + "_PREVIEW" + this.documentName.substring(index)
             if (this.source instanceof Uint8Array) {
                 this.pdfViewer.downloadManager.downloadData(this.source, editedDocumentName)
             } else {
                 if (/^blob:/.test(this.source)) {
-                    let blob = await fetch(this.source).then(r => r.blob());
-                    this.pdfViewer.downloadManager.download(blob, this.source, editedDocumentName)
+                    const response = await fetch(this.source)
+                    if (response.status === 200) {
+                        const blob = await response.blob()
+                        this.pdfViewer.downloadManager.download(blob, this.source, editedDocumentName)
+                    } else {
+                        throw new Error('PDFViewer: Fetching blob url failed.')
+                    }
                 } else {
                     this.pdfViewer.downloadManager.downloadUrl(this.source, editedDocumentName)
                 }
