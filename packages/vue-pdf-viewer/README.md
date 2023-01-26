@@ -169,6 +169,18 @@ Possible `number` values: Min = `0.1`, Max = `10`
 
 Possible `string` values: `'auto'`, `'page-actual',` `'page-fit'`, `'page-width'`
 
+### documentName
+
+Type: `string` | Required: `false` | Default: `'pdf-viewer-document.pdf'`
+
+The documentName is used for downloadable files.
+
+### allowDocumentDownload
+
+Type: `boolean` | Required: `false` | Default: `false`
+
+Shows the document download button if `true`
+
 ### pdfjsViewerOptions
 
 Type: `Object` | Required: `false` | Default: `{}`
