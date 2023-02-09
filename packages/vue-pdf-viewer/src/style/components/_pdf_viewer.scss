@@ -77,6 +77,49 @@
             }
         }
     }
+
+    .controls-new {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        z-index: 100;
+        top: 16px;
+        padding: 0 24px;
+        width: 100%;
+
+        .pages {
+            padding: 8px;
+            background: #f1f5f9;
+            color: rgba(#14213d, 0.8);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .scale {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .scale-button {
+                cursor: pointer;
+                padding: 8px;
+                background: #f1f5f9;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                color: rgba(#14213d, 0.8);
+
+                .md-icon {
+                    margin-top: 2px;
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+    }
 }
 
 @media screen and (min-width: 768px) {

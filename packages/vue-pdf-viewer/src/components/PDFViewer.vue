@@ -3,6 +3,19 @@
         <div class="viewer-container" ref="viewerContainer">
             <div class="viewer"></div>
         </div>
+        <div v-if="newControlsEnabled" class="controls-new" ref="viewerControls">
+            <div class="pages">
+                <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }} <span class="total">{{ pageCount }}</span>
+            </div>
+            <div class="scale">
+                <div class="scale-button" @click="decreaseScale">
+                    <MDIcon :icon="mdiMinus"/>
+                </div>
+                <div class="scale-button" @click="increaseScale">
+                    <MDIcon :icon="mdiPlus"/>
+                </div>
+            </div>
+        </div>
         <div class="controls">
             <div class="pages">
                 {{ _$t('pdfViewer.page') }}
@@ -93,6 +106,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        newControlsEnabled: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     data() {
@@ -166,8 +184,8 @@ export default {
             if (!this.allowDocumentDownload) {
                 return
             }
-            const index = this.documentName.lastIndexOf(".pdf")
-            const editedDocumentName = this.documentName.substring(0, index) + "_PREVIEW" + this.documentName.substring(index)
+            const index = this.documentName.lastIndexOf('.pdf')
+            const editedDocumentName = this.documentName.substring(0, index) + '_PREVIEW' + this.documentName.substring(index)
             if (this.source instanceof Uint8Array) {
                 this.pdfViewer.downloadManager.downloadData(this.source, editedDocumentName)
             } else {
@@ -227,6 +245,9 @@ export default {
 
                 const event = new Event('PDFViewer:pagesLoaded')
                 window.dispatchEvent(event)
+
+                const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
+                this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
             })
 
             this.pdfViewer.setDocument(this.pdfDocument)
