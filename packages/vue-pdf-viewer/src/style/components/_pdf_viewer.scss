@@ -1,7 +1,8 @@
 @import "@certifaction/pdfjs/dist/pdf_viewer_scss";
 
 .pdf-viewer {
-    --pdfviewer-color-controls: rgba(#14213d, 0.8);
+    --pdfviewer-color-controls-font: rgba(#14213d, 0.8);
+    --pdfviewer-color-controls-background: #f1f5f9;
     position: relative;
     font-family: $font-family-sans-serif;
     font-size: $font-size-normal;
@@ -91,8 +92,8 @@
 
         .pages {
             padding: 8px;
-            background: #f1f5f9;
-            color: var(--pdfviewer-color-controls);
+            background: var(--pdfviewer-color-controls-background);
+            color: var(--pdfviewer-color-controls-font);
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
@@ -107,11 +108,11 @@
             .scale-button {
                 cursor: pointer;
                 padding: 8px;
-                background: #f1f5f9;
+                background: var(--pdfviewer-color-controls-background);
                 border-radius: 50%;
                 width: 40px;
                 height: 40px;
-                color: var(--pdfviewer-color-controls);
+                color: var(--pdfviewer-color-controls-font);
 
                 .md-icon {
                     margin-top: 2px;
