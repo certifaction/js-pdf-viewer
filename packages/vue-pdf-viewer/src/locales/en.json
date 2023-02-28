@@ -6,6 +6,7 @@
             "pageActual": "Actual Size",
             "pageFit": "Page Fit",
             "pageWidth": "Page Width"
-        }
+        },
+        "pageOf": "of"
     }
 }

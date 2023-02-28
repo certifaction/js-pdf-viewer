@@ -6,6 +6,7 @@
             "pageActual": "Taille réelle",
             "pageFit": "Page entière",
             "pageWidth": "Pleine largeur"
-        }
+        },
+        "pageOf": "de"
     }
 }

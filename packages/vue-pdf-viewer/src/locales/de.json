@@ -6,6 +6,7 @@
             "pageActual": "Originalgröße",
             "pageFit": "Seitengröße",
             "pageWidth": "Seitenbreite"
-        }
+        },
+        "pageOf": "von"
     }
 }

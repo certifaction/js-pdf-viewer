@@ -3,12 +3,31 @@
         <div class="viewer-container" ref="viewerContainer">
             <div class="viewer"></div>
         </div>
-        <div class="controls">
+        <div v-if="newControlsEnabled" class="controls-new" ref="viewerControls">
+            <div class="pages">
+                <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }} <span class="total">{{ pageCount }}</span>
+            </div>
+            <div class="scale">
+                <div class="scale-button" @click="pageFit">
+                    <MDIcon :icon="mdiCropFree"/>
+                </div>
+                <div class="scale-button" @click="decreaseScale">
+                    <MDIcon :icon="mdiMinus"/>
+                </div>
+                <div class="scale-button" @click="increaseScale">
+                    <MDIcon :icon="mdiPlus"/>
+                </div>
+            </div>
+        </div>
+        <div v-else class="controls">
             <div class="pages">
                 {{ _$t('pdfViewer.page') }}
                 <span class="current">{{ currentPage }}</span> / <span class="total">{{ pageCount }}</span>
             </div>
             <div class="scale">
+                <button type="button" class="btn" @click="pageFit">
+                    <MDIcon :icon="mdiCropFree"/>
+                </button>
                 <button type="button" class="btn" @click="decreaseScale">
                     <MDIcon :icon="mdiMinus"/>
                 </button>
@@ -31,7 +50,7 @@
 </template>
 
 <script>
-import { mdiMinus, mdiPlus, mdiDownload } from '@mdi/js'
+import { mdiMinus, mdiPlus, mdiDownload, mdiCropFree } from '@mdi/js'
 import { pdfjsLib } from '@certifaction/pdfjs'
 import pdfjsViewer from '../pdf/pdf_viewer'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
@@ -93,6 +112,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        newControlsEnabled: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     data() {
@@ -100,6 +124,7 @@ export default {
             mdiMinus,
             mdiPlus,
             mdiDownload,
+            mdiCropFree,
             pdfViewer: null,
             pdfDocument: null,
             scaleOptions: [
@@ -138,6 +163,9 @@ export default {
         }
     },
     methods: {
+        pageFit() {
+            this.pdfViewer.currentScaleValue = this.currentScale = 'page-fit'
+        },
         decreaseScale() {
             let newScale = this.pdfViewer.currentScale
             newScale -= 0.1
@@ -166,8 +194,8 @@ export default {
             if (!this.allowDocumentDownload) {
                 return
             }
-            const index = this.documentName.lastIndexOf(".pdf")
-            const editedDocumentName = this.documentName.substring(0, index) + "_PREVIEW" + this.documentName.substring(index)
+            const index = this.documentName.lastIndexOf('.pdf')
+            const editedDocumentName = this.documentName.substring(0, index) + '_PREVIEW' + this.documentName.substring(index)
             if (this.source instanceof Uint8Array) {
                 this.pdfViewer.downloadManager.downloadData(this.source, editedDocumentName)
             } else {
@@ -227,6 +255,9 @@ export default {
 
                 const event = new Event('PDFViewer:pagesLoaded')
                 window.dispatchEvent(event)
+
+                const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
+                this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
             })
 
             this.pdfViewer.setDocument(this.pdfDocument)
