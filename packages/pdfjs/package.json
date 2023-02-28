@@ -1,6 +1,6 @@
 {
     "name": "@certifaction/pdfjs",
-    "version": "1.4.0",
+    "version": "1.5.1",
     "description": "Convert Mozillas PDF.js to an ES6 module and transform CSS.",
     "private": false,
     "publishConfig": {

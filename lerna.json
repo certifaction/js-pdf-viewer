@@ -1,14 +1,14 @@
 {
-    "version": "1.5.0",
-    "packages": [
-        "packages/*"
-    ],
-    "useWorkspaces": true,
-    "command": {
-        "publish": {
-            "ignoreChanges": [
-                "*.md"
-            ]
-        }
+  "version": "1.5.1",
+  "packages": [
+    "packages/*"
+  ],
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "ignoreChanges": [
+        "*.md"
+      ]
     }
+  }
 }
