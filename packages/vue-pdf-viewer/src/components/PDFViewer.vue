@@ -8,6 +8,9 @@
                 <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }} <span class="total">{{ pageCount }}</span>
             </div>
             <div class="scale">
+                <div class="scale-button" @click="pageFit">
+                    <MDIcon :icon="mdiCropFree"/>
+                </div>
                 <div class="scale-button" @click="decreaseScale">
                     <MDIcon :icon="mdiMinus"/>
                 </div>
@@ -16,12 +19,15 @@
                 </div>
             </div>
         </div>
-        <div class="controls">
+        <div v-else class="controls">
             <div class="pages">
                 {{ _$t('pdfViewer.page') }}
                 <span class="current">{{ currentPage }}</span> / <span class="total">{{ pageCount }}</span>
             </div>
             <div class="scale">
+                <button type="button" class="btn" @click="pageFit">
+                    <MDIcon :icon="mdiCropFree"/>
+                </button>
                 <button type="button" class="btn" @click="decreaseScale">
                     <MDIcon :icon="mdiMinus"/>
                 </button>
@@ -44,7 +50,7 @@
 </template>
 
 <script>
-import { mdiMinus, mdiPlus, mdiDownload } from '@mdi/js'
+import { mdiMinus, mdiPlus, mdiDownload, mdiCropFree } from '@mdi/js'
 import { pdfjsLib } from '@certifaction/pdfjs'
 import pdfjsViewer from '../pdf/pdf_viewer'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
@@ -118,6 +124,7 @@ export default {
             mdiMinus,
             mdiPlus,
             mdiDownload,
+            mdiCropFree,
             pdfViewer: null,
             pdfDocument: null,
             scaleOptions: [
@@ -156,6 +163,9 @@ export default {
         }
     },
     methods: {
+        pageFit() {
+            this.pdfViewer.currentScaleValue = this.currentScale = 'page-fit'
+        },
         decreaseScale() {
             let newScale = this.pdfViewer.currentScale
             newScale -= 0.1

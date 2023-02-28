@@ -1,6 +1,7 @@
 @import "@certifaction/pdfjs/dist/pdf_viewer_scss";
 
 .pdf-viewer {
+    --pdfviewer-color-controls: rgba(#14213d, 0.8);
     position: relative;
     font-family: $font-family-sans-serif;
     font-size: $font-size-normal;
@@ -91,7 +92,7 @@
         .pages {
             padding: 8px;
             background: #f1f5f9;
-            color: rgba(#14213d, 0.8);
+            color: var(--pdfviewer-color-controls);
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
@@ -110,7 +111,7 @@
                 border-radius: 50%;
                 width: 40px;
                 height: 40px;
-                color: rgba(#14213d, 0.8);
+                color: var(--pdfviewer-color-controls);
 
                 .md-icon {
                     margin-top: 2px;
