@@ -136,7 +136,6 @@ export default {
             newScale = Math.floor(newScale * 10) / 10
 
             this.currentScale = (newScale < MIN_SCALE) ? MIN_SCALE : newScale
-            this.updateCustomScale()
         },
         increaseScale() {
             let newScale = this.pdfViewer.currentScale
@@ -145,7 +144,6 @@ export default {
             newScale = Math.ceil(newScale * 10) / 10
 
             this.currentScale = (newScale > MAX_SCALE) ? MAX_SCALE : newScale
-            this.updateCustomScale()
         },
         async downloadDocument() {
             if (!this.allowDocumentDownload) {
