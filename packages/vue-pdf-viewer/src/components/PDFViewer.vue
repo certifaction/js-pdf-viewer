@@ -3,48 +3,28 @@
         <div class="viewer-container" ref="viewerContainer">
             <div class="viewer"></div>
         </div>
-        <div v-if="newControlsEnabled" class="controls-new" ref="viewerControls">
+        <div class="controls" ref="viewerControls">
             <div class="pages">
                 <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }} <span class="total">{{ pageCount }}</span>
             </div>
-            <div class="scale">
-                <div class="scale-button" @click="pageFit">
-                    <MDIcon :icon="mdiCropFree"/>
+            <div class="actions">
+                <div v-if="allowDocumentDownload" class="download">
+                    <div class="action-button" @click="downloadDocument">
+                        <MDIcon :icon="mdiDownload"/>
+                    </div>
                 </div>
-                <div class="scale-button" @click="decreaseScale">
-                    <MDIcon :icon="mdiMinus"/>
-                </div>
-                <div class="scale-button" @click="increaseScale">
-                    <MDIcon :icon="mdiPlus"/>
+                <div class="scale">
+                    <div v-if="showPageFitButton" class="action-button" @click="pageFit">
+                        <MDIcon :icon="mdiCropFree"/>
+                    </div>
+                    <div class="action-button" @click="decreaseScale">
+                        <MDIcon :icon="mdiMinus"/>
+                    </div>
+                    <div class="action-button" @click="increaseScale">
+                        <MDIcon :icon="mdiPlus"/>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div v-else class="controls">
-            <div class="pages">
-                {{ _$t('pdfViewer.page') }}
-                <span class="current">{{ currentPage }}</span> / <span class="total">{{ pageCount }}</span>
-            </div>
-            <div class="scale">
-                <button type="button" class="btn" @click="pageFit">
-                    <MDIcon :icon="mdiCropFree"/>
-                </button>
-                <button type="button" class="btn" @click="decreaseScale">
-                    <MDIcon :icon="mdiMinus"/>
-                </button>
-                <button type="button" class="btn" @click="increaseScale">
-                    <MDIcon :icon="mdiPlus"/>
-                </button>
-                <select class="scale-selector" v-model="currentScale">
-                    <option v-for="option in scaleOptions"
-                            :key="option.value"
-                            :value="option.value">{{ option.label }}
-                    </option>
-                    <option :value="customScale.value" disabled class="hidden">{{ customScale.label }}</option>
-                </select>
-            </div>
-            <button v-if="allowDocumentDownload" type="button" class="btn download-button" @click="downloadDocument">
-                <MDIcon :icon="mdiDownload"/>
-            </button>
         </div>
     </div>
 </template>
@@ -113,11 +93,6 @@ export default {
             required: false,
             default: false
         },
-        newControlsEnabled: {
-            type: Boolean,
-            required: false,
-            default: false
-        }
     },
     data() {
         return {
@@ -127,22 +102,7 @@ export default {
             mdiCropFree,
             pdfViewer: null,
             pdfDocument: null,
-            scaleOptions: [
-                { label: this._$t('pdfViewer.scale.auto'), value: 'auto' },
-                { label: this._$t('pdfViewer.scale.pageActual'), value: 'page-actual' },
-                { label: this._$t('pdfViewer.scale.pageFit'), value: 'page-fit' },
-                { label: this._$t('pdfViewer.scale.pageWidth'), value: 'page-width' },
-                { label: '50%', value: 0.5 },
-                { label: '75%', value: 0.75 },
-                { label: '100%', value: 1 },
-                { label: '125%', value: 1.25 },
-                { label: '150%', value: 1.5 },
-                { label: '200%', value: 2 },
-                { label: '300%', value: 3 },
-                { label: '400%', value: 4 }
-            ],
             currentScale: null,
-            customScale: { label: '', value: 0 }
         }
     },
     computed: {
@@ -151,6 +111,9 @@ export default {
         },
         pageCount() {
             return (this.pdfDocument) ? this.pdfDocument.numPages : 0
+        },
+        showPageFitButton() {
+            return this.currentScale !== 'page-fit'
         }
     },
     watch: {
@@ -184,31 +147,23 @@ export default {
             this.currentScale = (newScale > MAX_SCALE) ? MAX_SCALE : newScale
             this.updateCustomScale()
         },
-        updateCustomScale() {
-            if (!this.scaleOptions.find(option => option.value === this.currentScale)) {
-                this.customScale.label = (this.currentScale * 100).toFixed(0) + '%'
-                this.customScale.value = this.currentScale
-            }
-        },
         async downloadDocument() {
             if (!this.allowDocumentDownload) {
                 return
             }
-            const index = this.documentName.lastIndexOf('.pdf')
-            const editedDocumentName = this.documentName.substring(0, index) + '_PREVIEW' + this.documentName.substring(index)
             if (this.source instanceof Uint8Array) {
-                this.pdfViewer.downloadManager.downloadData(this.source, editedDocumentName)
+                this.pdfViewer.downloadManager.downloadData(this.source, this.documentName)
             } else {
                 if (/^blob:/.test(this.source)) {
                     const response = await fetch(this.source)
                     if (response.status === 200) {
                         const blob = await response.blob()
-                        this.pdfViewer.downloadManager.download(blob, this.source, editedDocumentName)
+                        this.pdfViewer.downloadManager.download(blob, this.source, this.documentName)
                     } else {
                         throw new Error('PDFViewer: Fetching blob url failed.')
                     }
                 } else {
-                    this.pdfViewer.downloadManager.downloadUrl(this.source, editedDocumentName)
+                    this.pdfViewer.downloadManager.downloadUrl(this.source, this.documentName)
                 }
             }
         }
@@ -239,7 +194,7 @@ export default {
             }
 
             if (this.source instanceof Uint8Array) {
-                docOptions.data = this.source
+                docOptions.data = new Uint8Array(this.source)
             } else {
                 docOptions.url = this.source
             }
