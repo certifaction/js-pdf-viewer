@@ -25,6 +25,10 @@
 
             .page {
                 box-sizing: content-box;
+
+                .canvasWrapper {
+                    box-shadow: 0 4px 6px 1px rgba(#000, 0.25);
+                }
             }
         }
     }
