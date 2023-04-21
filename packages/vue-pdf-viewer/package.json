@@ -13,6 +13,7 @@
         "url": "https://github.com/certifaction/js-pdf-viewer.git",
         "directory": "packages/vue-pdf-viewer"
     },
+    "type": "module",
     "main": "dist/certifaction-vue-pdf-viewer.common.js",
     "module": "dist/certifaction-vue-pdf-viewer.esm.js",
     "files": [
@@ -29,34 +30,33 @@
     },
     "dependencies": {
         "@certifaction/pdfjs": "^1.5.1",
-        "@mdi/js": "^7.1.96",
-        "core-js": "^3.26.1"
+        "@mdi/js": "^7.2.96",
+        "core-js": "^3.30.1"
     },
     "peerDependencies": {
         "vue": "^2.7",
         "vue-i18n": "^8.28"
     },
     "devDependencies": {
-        "@babel/core": "^7.21.0",
-        "@babel/preset-env": "^7.20.2",
+        "@babel/core": "^7.21.4",
+        "@babel/eslint-parser": "^7.21.3",
+        "@babel/preset-env": "^7.21.4",
         "@rollup/plugin-babel": "^6.0.3",
-        "@rollup/plugin-commonjs": "^23.0.7",
-        "@rollup/plugin-node-resolve": "^15.0.1",
-        "autoprefixer": "^10.4.13",
-        "babel-eslint": "^10.1.0",
-        "eslint": "^8.28.0",
+        "@rollup/plugin-commonjs": "^24.1.0",
+        "@rollup/plugin-node-resolve": "^15.0.2",
+        "autoprefixer": "^10.4.14",
+        "eslint": "^8.38.0",
         "eslint-config-standard": "^17.0.0",
         "eslint-plugin-import": "^2.27.5",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^6.1.1",
-        "eslint-plugin-vue": "^9.9.0",
-        "glob": "^8.1.0",
+        "eslint-plugin-vue": "^9.11.0",
+        "glob": "^10.2.1",
         "npm-run-all": "^4.1.5",
-        "rimraf": "^3.0.2",
-        "rollup": "^2.79.1",
+        "rimraf": "^5.0.0",
+        "rollup": "^3.20.7",
         "rollup-plugin-vue": "^5.1.9",
         "vue": "^2.7.14",
         "vue-template-compiler": "^2.7.14"
-    },
-    "gitHead": "f5455b748987733baa977142c6b21111fcfa6029"
+    }
 }
