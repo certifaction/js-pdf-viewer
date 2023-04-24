@@ -2,7 +2,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import { babel } from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
-import pkg from '../package.json'
+import pkg from '../package.json' assert { type: 'json' }
 
 const sourcemap = true
 

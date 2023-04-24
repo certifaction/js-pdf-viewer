@@ -1,7 +1,8 @@
 'use strict'
-const fs = require('fs')
-const glob = require('glob')
-const pkg = require(`${process.cwd()}/package.json`)
+
+import fs from 'fs'
+import { glob } from 'glob'
+import pkg from '../package.json' assert { type: 'json' }
 
 const year = new Date().getFullYear()
 const banner = `/*!
