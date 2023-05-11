@@ -4,7 +4,7 @@
     "description": "Convert Mozillas PDF.js to an ES6 module and transform CSS.",
     "private": false,
     "publishConfig": {
-        "access": "public"
+        "registry": "https://npm.pkg.github.com/@certifaction"
     },
     "license": "MIT",
     "homepage": "https://certifaction.com",
