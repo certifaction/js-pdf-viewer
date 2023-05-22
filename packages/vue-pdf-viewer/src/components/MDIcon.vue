@@ -6,6 +6,7 @@ const props = defineProps({
     }
 })
 </script>
+
 <template>
     <svg class="md-icon" viewBox="0 0 24 24">
         <path fill="currentColor" :d="props.icon"/>

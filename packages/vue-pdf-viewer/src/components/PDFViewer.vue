@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, computed, toRaw } from 'vue'
+import { onMounted, ref } from 'vue'
 import { mdiMinus, mdiPlus, mdiCropFree } from '@mdi/js'
 import { pdfjsLib } from '@certifaction/pdfjs'
 import pdfjsViewer from '../pdf/pdf_viewer'
@@ -11,13 +11,16 @@ const MAX_SCALE = 10
 // Props
 const props = defineProps({
     pdfjsWorkerSrc: {
-        type: String, required: false
+        type: String,
+        required: false
     },
     pdfjsWorkerInstance: {
-        type: Worker, required: false
+        type: Worker,
+        required: false
     },
     pdfjsCMapUrl: {
-        type: String, required: true
+        type: String,
+        required: true
     },
     source: {
         required: true,
@@ -49,19 +52,18 @@ const emit = defineEmits(['error'])
 
 // Reactive data
 const state = ref({
-    pdfViewer: null,
-    pdfDocument: null,
-    currentScale: null
+    pagesCount: 1,
+    currentPage: 1,
+    showPageFitButton: false
 })
 
 // Template refs
 const viewerControls = ref(null)
 const viewerContainer = ref(null)
 
-// Computed
-const currentPage = computed(() => state.value.pdfViewer ? state.value.pdfViewer.currentPageNumber : 0)
-const pageCount = computed(() => state.value.pdfDocument ? state.value.pdfDocument.numPages : 0)
-const showPageFitButton = computed(() => state.value.currentScale !== 'page-fit')
+// Non-reactive data
+let pdfViewer = null
+let pdfDocument = null
 
 if (props.pdfjsWorkerInstance) {
     pdfjsLib.GlobalWorkerOptions.workerPort = props.pdfjsWorkerInstance
@@ -71,41 +73,32 @@ if (props.pdfjsWorkerInstance) {
     throw new Error('PDFViewer: pdfjsWorkerSrc or pdfjsWorkerInstance needs to be defined.')
 }
 
-function pageFit() {
-    toRaw(state.value.pdfViewer).currentScaleValue = state.value.currentScale = 'page-fit'
+const pageFit = () => {
+    pdfViewer.currentScaleValue = 'page-fit'
 }
 
-function decreaseScale() {
-    let newScale = state.value.pdfViewer.currentScale
+const decreaseScale = () =>  {
+    let newScale = pdfViewer.currentScale
     newScale -= 0.1
     newScale = newScale.toFixed(2)
     newScale = Math.floor(newScale * 10) / 10
 
-    state.value.currentScale = (newScale < MIN_SCALE) ? MIN_SCALE : newScale
+    pdfViewer.currentScaleValue = (newScale < MIN_SCALE) ? MIN_SCALE : newScale
 }
 
-function increaseScale() {
-    let newScale = state.value.pdfViewer.currentScale
+const increaseScale = () =>  {
+    let newScale = pdfViewer.currentScale
     newScale += 0.1
     newScale = newScale.toFixed(2)
     newScale = Math.ceil(newScale * 10) / 10
 
-    state.value.currentScale = (newScale > MAX_SCALE) ? MAX_SCALE : newScale
+    pdfViewer.currentScaleValue = (newScale > MAX_SCALE) ? MAX_SCALE : newScale
 }
-
-// Watchers
-watch(() => state.value.currentScale, (newCurrentScale, oldCurrentScale) => {
-    if (oldCurrentScale) {
-        toRaw(state.value.pdfViewer).currentScaleValue = state.value.currentScale
-        const event = new CustomEvent('PDFViewer:scaleChange', { detail: toRaw(state.value.pdfViewer).currentScale })
-        window.dispatchEvent(event)
-    }
-})
 
 onMounted(async () => {
     try {
         const eventBus = new pdfjsViewer.EventBus()
-        state.value.pdfViewer = new pdfjsViewer.PDFViewer({
+        pdfViewer = new pdfjsViewer.PDFViewer({
             ...props.pdfjsViewerOptions,
             container: viewerContainer.value,
             eventBus
@@ -123,13 +116,14 @@ onMounted(async () => {
         }
 
         const documentLoadingTask = pdfjsLib.getDocument(docOptions)
-        state.value.pdfDocument = await documentLoadingTask.promise
+        pdfDocument = await documentLoadingTask.promise
 
         const event = new Event('PDFViewer:documentLoaded')
         window.dispatchEvent(event)
 
-        eventBus.on('pagesloaded', () => {
-            toRaw(state.value.pdfViewer).currentScaleValue = state.value.currentScale = props.defaultScale
+        eventBus.on('pagesloaded', (pagesLoadedEvent) => {
+            pdfViewer.currentScaleValue = props.defaultScale
+            state.value.pagesCount = pagesLoadedEvent.pagesCount
 
             const event = new Event('PDFViewer:pagesLoaded')
             window.dispatchEvent(event)
@@ -138,7 +132,17 @@ onMounted(async () => {
             viewerControls.value.style.width = `calc(100% - ${scrollbarWidth}px)`
         })
 
-        toRaw(state.value.pdfViewer).setDocument(toRaw(state.value.pdfDocument))
+        eventBus.on('pagechanging', function(pageChangingEvent) {
+            state.value.currentPage = pageChangingEvent.pageNumber
+        })
+
+        eventBus.on('scalechanging', function(scaleChangingEvent) {
+            state.value.showPageFitButton = scaleChangingEvent.presetValue !== 'page-fit'
+            const event = new CustomEvent('PDFViewer:scaleChange', { detail: pdfViewer.currentScale })
+            window.dispatchEvent(event)
+        })
+
+        pdfViewer.setDocument(pdfDocument)
     } catch (error) {
         emit('error', error)
         throw error
@@ -149,15 +153,15 @@ onMounted(async () => {
 <template>
     <div class="pdf-viewer">
         <div class="viewer-container" ref="viewerContainer">
-            <div class="viewer"></div>
+            <div class="viewer" />
         </div>
         <div class="controls" ref="viewerControls">
             <div class="pages">
-                <span class="current">{{ currentPage }}</span> {{ $t('pdfViewer.pageOf') }} <span class="total">{{ pageCount }}</span>
+                <span class="current">{{ state.currentPage }}</span> {{ $t('pdfViewer.pageOf') }} <span class="total">{{ state.pagesCount }}</span>
             </div>
             <div class="actions">
                 <div class="scale">
-                    <div v-if="showPageFitButton" class="action-button" @click="pageFit">
+                    <div v-if="state.showPageFitButton" class="action-button" @click="pageFit">
                         <MDIcon :icon="mdiCropFree"/>
                     </div>
                     <div class="action-button" @click="decreaseScale">
