@@ -2,8 +2,11 @@
 import { onMounted, ref } from 'vue'
 import { mdiMinus, mdiPlus, mdiCropFree } from '@mdi/js'
 import { pdfjsLib } from '@certifaction/pdfjs'
+import { useI18n } from 'vue-i18n'
 import pdfjsViewer from '../pdf/pdf_viewer'
 import MDIcon from './MDIcon.vue'
+
+const { t } = useI18n()
 
 const MIN_SCALE = 0.1
 const MAX_SCALE = 10
@@ -157,7 +160,7 @@ onMounted(async () => {
         </div>
         <div class="controls" ref="viewerControls">
             <div class="pages">
-                <span class="current">{{ state.currentPage }}</span> {{ $t('pdfViewer.pageOf') }} <span class="total">{{ state.pagesCount }}</span>
+                <span class="current">{{ state.currentPage }}</span> {{ t('pdfViewer.pageOf') }} <span class="total">{{ state.pagesCount }}</span>
             </div>
             <div class="actions">
                 <div class="scale">
