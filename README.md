@@ -1,5 +1,7 @@
 # @certifaction/js-pdf-viewer
 
+> Branch [`1.x`](https://github.com/certifaction/js-pdf-viewer/tree/1.x) is for Vue2. Branch [`main`](https://github.com/certifaction/js-pdf-viewer/tree/main) is for Vue3
+
 [![lerna][lerna]][lerna-url]
 
 ## Table of contents
@@ -33,7 +35,6 @@ Clone the git repo and install dependencies.
 git clone https://github.com/certifaction/js-pdf-viewer.git
 cd js-pdf-viewer
 npm install
-npm run bootstrap
 ```
 
 Check and fix linting errors

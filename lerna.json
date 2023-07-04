@@ -3,7 +3,6 @@
   "packages": [
     "packages/*"
   ],
-  "useWorkspaces": true,
   "command": {
     "publish": {
       "registry": "https://npm.pkg.github.com",
@@ -11,5 +10,6 @@
         "*.md"
       ]
     }
-  }
+  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
