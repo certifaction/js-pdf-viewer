@@ -1,14 +1,10 @@
 {
   "version": "1.6.0",
-  "packages": [
-    "packages/*"
-  ],
-  "useWorkspaces": true,
+  "packages": ["packages/*"],
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "*.md"
-      ]
+      "ignoreChanges": ["*.md"]
     }
-  }
+  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
