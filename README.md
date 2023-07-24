@@ -19,14 +19,14 @@ This monorepo contains these packages:
 
 | Project | Package | Version |
 |---|---|---|
-| Pdf.js ES6 Module | [@certifaction/pdfjs](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/pdfjs) | [![latest](https://img.shields.io/npm/v/@certifaction/pdfjs/latest.svg)](https://npmjs.com/package/@certifaction/pdfjs) |
-| Vue.js PDF-Viewer | [@certifaction/vue-pdf-viewer](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/vue-pdf-viewer) | [![latest](https://img.shields.io/npm/v/@certifaction/vue-pdf-viewer/latest.svg)](https://npmjs.com/package/@certifaction/vue-pdf-viewer) |
+| Pdf.js ES6 Module | [@certifaction/pdfjs](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/pdfjs) | [![latest](https://img.shields.io/github/package-json/v/certifaction/js-pdf-viewer?filename=packages%2Fpdfjs%2Fpackage.json)](https://github.com/certifaction/js-pdf-viewer/pkgs/npm/pdfjs) |
+| Vue.js PDF-Viewer | [@certifaction/vue-pdf-viewer](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/vue-pdf-viewer) | [![latest](https://img.shields.io/github/package-json/v/certifaction/js-pdf-viewer?filename=packages%2Fvue-pdf-viewer%2Fpackage.json)](https://github.com/certifaction/js-pdf-viewer/pkgs/npm/vue-pdf-viewer) |
 
 ## Development
 
 ### Requirements
 
-* [NodeJS](https://nodejs.org) >= 18
+* [NodeJS](https://nodejs.org) >= 20
 
 ### Getting started
 

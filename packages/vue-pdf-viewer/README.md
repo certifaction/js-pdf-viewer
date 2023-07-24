@@ -1,7 +1,7 @@
 # @certifaction/vue-pdf-viewer
 
-[![npm][npm]][npm-url]
-[![lerna][lerna]][lerna-url]
+[![package-shield][package-shield]][package-url]
+[![lerna-shield][lerna-shield]][lerna-url]
 
 PDF-Viewer for Vue.js based on Mozillas PDF.js
 
@@ -196,7 +196,7 @@ Possible options are the PDFViewerOptions from [https://github.com/mozilla/pdf.j
 
 Released by [Certifaction AG](https://certifaction.com)
 
-[npm]: https://img.shields.io/npm/v/@certifaction/vue-pdf-viewer.svg
-[npm-url]: https://www.npmjs.com/package/@certifaction/vue-pdf-viewer
-[lerna]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
+[package-shield]: https://img.shields.io/github/package-json/v/certifaction/js-pdf-viewer?filename=packages%2Fvue-pdf-viewer%2Fpackage.json
+[package-url]: https://github.com/certifaction/js-pdf-viewer/pkgs/npm/vue-pdf-viewer
+[lerna-shield]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
 [lerna-url]: https://lerna.js.org/
