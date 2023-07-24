@@ -1,7 +1,7 @@
 # @certifaction/pdfjs
 
-[![npm][npm]][npm-url]
-[![lerna][lerna]][lerna-url]
+[![package-shield][package-shield]][package-url]
+[![lerna-shield][lerna-shield]][lerna-url]
 
 Converted Mozillas PDF.js to an ES6 module, transform CSS and create SCSS to be used in [@certifaction/vue-pdf-viewer](https://github.com/certifaction/js-pdf-viewer/tree/main/packages/vue-pdf-viewer).
 
@@ -33,7 +33,7 @@ Check usage in [@certifaction/vue-pdf-viewer](https://github.com/certifaction/js
 
 Released by [Certifaction AG](https://certifaction.com)
 
-[npm]: https://img.shields.io/npm/v/@certifaction/pdfjs.svg
-[npm-url]: https://www.npmjs.com/package/@certifaction/pdfjs
-[lerna]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
+[package-shield]: https://img.shields.io/github/package-json/v/certifaction/js-pdf-viewer?filename=packages%2Fpdfjs%2Fpackage.json
+[package-url]: https://github.com/certifaction/js-pdf-viewer/pkgs/npm/pdfjs
+[lerna-shield]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
 [lerna-url]: https://lerna.js.org/

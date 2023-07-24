@@ -1,5 +1,1 @@
-> 1%
-last 2 versions
-Firefox ESR
-not dead
-not ie <= 11
+defaults and supports es6-module
