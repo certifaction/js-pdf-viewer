@@ -47,16 +47,15 @@ Build libraries
 npm run build
 ```
 
-### Publishing
+### Create new release / publish to GitHub Packages
 
-To publish a new version please commit your changes to master and then execute
+1. Create release branch (has to start with `releases/`). It's best to name the branch according to the version you want to release (ex. `releases/v1.2.3`, or `releases/v2.0.0-rc.0`). The branch name isn't used for the actual release tough.
 
-```shell script
-npm run build
-npm run publish
-```
+2. Execute `npm run create-version` and follow the prompts. You can use `npm run force-create-version` to force a new version to be published.
 
-This will start the wizard to publish a new version.
+3. Commit and push the changes created by Lerna.
+
+4. Create PR based on the release branch and merge it. This will automatically publish the release to GitHub Packages.
 
 ## License
 
