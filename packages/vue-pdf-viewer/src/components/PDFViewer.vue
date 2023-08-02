@@ -128,11 +128,11 @@ onMounted(async () => {
             pdfViewer.currentScaleValue = props.defaultScale
             state.value.pagesCount = pagesLoadedEvent.pagesCount
 
-            const event = new Event('PDFViewer:pagesLoaded')
-            window.dispatchEvent(event)
-
             const scrollbarWidth = viewerContainer.value.offsetWidth - viewerContainer.value.clientWidth
             viewerControls.value.style.width = `calc(100% - ${scrollbarWidth}px)`
+
+            const event = new CustomEvent('PDFViewer:pagesLoaded', { detail: { pages: pagesLoadedEvent.source._pages }});
+            window.dispatchEvent(event)
         })
 
         eventBus.on('pagechanging', function(pageChangingEvent) {
@@ -141,7 +141,7 @@ onMounted(async () => {
 
         eventBus.on('scalechanging', function(scaleChangingEvent) {
             state.value.showPageFitButton = scaleChangingEvent.presetValue !== 'page-fit'
-            const event = new CustomEvent('PDFViewer:scaleChange', { detail: pdfViewer.currentScale })
+            const event = new CustomEvent('PDFViewer:scaleChange', { detail: { currentScale: pdfViewer.currentScale }})
             window.dispatchEvent(event)
         })
 
