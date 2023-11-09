@@ -37,6 +37,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        pointer-events: none;
         position: absolute;
         z-index: 100;
         top: 16px;
@@ -57,6 +58,7 @@
             display: flex;
 
             .action-button {
+                pointer-events: auto;
                 position: relative;
                 cursor: pointer;
                 padding: 8px;
