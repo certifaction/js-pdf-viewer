@@ -1,11 +1,16 @@
 <template>
     <div class="pdf-viewer">
+        <slot name="before-viewer-container"/>
         <div class="viewer-container" ref="viewerContainer">
+            <slot name="before-viewer"/>
             <div class="viewer"></div>
+            <slot name="after-viewer"/>
         </div>
+        <slot name="after-viewer-container"/>
         <div class="controls" ref="viewerControls">
             <div class="pages">
-                <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }} <span class="total">{{ pageCount }}</span>
+                <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }}
+                <span class="total">{{ pageCount }}</span>
             </div>
             <div class="actions">
                 <div v-if="allowDocumentDownload" class="download">
@@ -92,7 +97,7 @@ export default {
             type: Boolean,
             required: false,
             default: false
-        },
+        }
     },
     data() {
         return {
@@ -102,7 +107,7 @@ export default {
             mdiCropFree,
             pdfViewer: null,
             pdfDocument: null,
-            currentScale: null,
+            currentScale: null
         }
     },
     computed: {
