@@ -1,6 +1,6 @@
 {
     "name": "@certifaction/vue-pdf-viewer",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
     "private": false,
     "publishConfig": {
@@ -29,7 +29,7 @@
         "build": "npm-run-all clean build:js banner"
     },
     "dependencies": {
-        "@certifaction/pdfjs": "^1.7.0",
+        "@certifaction/pdfjs": "^1.7.1",
         "@mdi/js": "^7.3.67",
         "core-js": "^3.33.2"
     },
