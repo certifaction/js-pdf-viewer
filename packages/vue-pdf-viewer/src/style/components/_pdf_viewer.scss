@@ -1,4 +1,4 @@
-@import "@certifaction/pdfjs/dist/pdf_viewer_scss";
+@import "pdfjs-dist/web/pdf_viewer.css";
 
 .pdf-viewer {
     --pdfviewer-color-controls-font: rgba(#14213d, 0.8);
@@ -20,7 +20,7 @@
         height: 100%;
         background-color: #fbfbfc;
 
-        .viewer {
+        .pdfViewer {
             position: relative;
 
             .page {
