@@ -1,4 +1,5 @@
 {
+    "name": "@certifaction/js-pdf-viewer",
     "private": true,
     "repository": {
         "type": "git",
