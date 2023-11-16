@@ -39,11 +39,6 @@ Check and fix linting errors
 npm run lint
 ```
 
-Build libraries
-```shell script
-npm run build
-```
-
 ### Create new release / publish to GitHub Packages
 
 1. Create release branch (has to start with `releases/`). It's best to name the branch according to the version you want to release (ex. `releases/v1.2.3`, or `releases/v2.0.0-rc.0`). The branch name isn't used for the actual release tough.
