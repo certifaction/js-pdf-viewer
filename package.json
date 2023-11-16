@@ -16,6 +16,7 @@
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && npm install"
     },
     "devDependencies": {
+        "@certifaction/prettier-config": "^3.1.1",
         "lerna": "^7.4.2",
         "prettier": "^3.1.0"
     },
