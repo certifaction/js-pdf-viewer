@@ -1,3 +1,0 @@
-@function pdf-viewer-asset($file) {
-    @return url($pdf-viewer-asset-base-path + $file);
-}

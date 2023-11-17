@@ -1,15 +1,16 @@
 {
-  "version": "2.0.5",
-  "packages": [
-    "packages/*"
-  ],
-  "command": {
-    "publish": {
-      "registry": "https://npm.pkg.github.com",
-      "ignoreChanges": [
-        "*.md"
-      ]
+    "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+    "version": "2.0.5",
+    "packages": ["packages/*"],
+    "command": {
+        "version": {
+            "ignoreChanges": [
+                "*.md"
+            ],
+            "includeMergedTags": true
+        },
+        "publish": {
+            "registry": "https://npm.pkg.github.com"
+        }
     }
-  },
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
