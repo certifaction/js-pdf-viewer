@@ -1,12 +1,12 @@
 <template>
     <div class="pdf-viewer">
-        <slot name="before-viewer-container"/>
+        <slot name="before-viewer-container" />
         <div class="viewer-container" ref="viewerContainer">
-            <slot name="before-viewer"/>
-            <div class="viewer"></div>
-            <slot name="after-viewer"/>
+            <slot name="before-viewer" />
+            <div class="pdfViewer" ref="viewer" />
+            <slot name="after-viewer" />
         </div>
-        <slot name="after-viewer-container"/>
+        <slot name="after-viewer-container" />
         <div class="controls" ref="viewerControls">
             <div class="pages">
                 <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }}
@@ -15,18 +15,18 @@
             <div class="actions">
                 <div v-if="allowDocumentDownload" class="download">
                     <div class="action-button" @click="downloadDocument">
-                        <MDIcon :icon="mdiDownload"/>
+                        <MDIcon :icon="mdiDownload" />
                     </div>
                 </div>
                 <div class="scale">
                     <div v-if="showPageFitButton" class="action-button" @click="pageFit">
-                        <MDIcon :icon="mdiCropFree"/>
+                        <MDIcon :icon="mdiCropFree" />
                     </div>
                     <div class="action-button" @click="decreaseScale">
-                        <MDIcon :icon="mdiMinus"/>
+                        <MDIcon :icon="mdiMinus" />
                     </div>
                     <div class="action-button" @click="increaseScale">
-                        <MDIcon :icon="mdiPlus"/>
+                        <MDIcon :icon="mdiPlus" />
                     </div>
                 </div>
             </div>
@@ -35,9 +35,8 @@
 </template>
 
 <script>
-import { mdiMinus, mdiPlus, mdiDownload, mdiCropFree } from '@mdi/js'
-import { pdfjsLib } from '@certifaction/pdfjs'
-import pdfjsViewer from '../pdf/pdf_viewer'
+import { mdiCropFree, mdiDownload, mdiMinus, mdiPlus } from '@mdi/js'
+import * as pdfjsLib from 'pdfjs-dist'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
 import MDIcon from './MDIcon.vue'
 
@@ -46,36 +45,26 @@ const MAX_SCALE = 10
 
 export default {
     name: 'PDFViewer',
-    mixins: [
-        i18nWrapperMixin
-    ],
+    mixins: [i18nWrapperMixin],
     components: {
-        MDIcon
+        MDIcon,
     },
     props: {
-        pdfjsWorkerSrc: {
-            type: String,
-            required: false
-        },
-        pdfjsWorkerInstance: {
-            type: Worker,
-            required: false
-        },
         pdfjsCMapUrl: {
             type: String,
-            required: true
+            required: true,
         },
         source: {
             required: true,
             validator: (value) => {
                 return !!value && (typeof value === 'string' || value instanceof Uint8Array)
-            }
+            },
         },
         pdfjsViewerOptions: {
             type: Object,
-            default: function() {
+            default: function () {
                 return {}
-            }
+            },
         },
         defaultScale: {
             required: false,
@@ -86,18 +75,18 @@ export default {
                     return !!value && typeof value === 'number'
                 }
             },
-            default: 'auto'
+            default: 'auto',
         },
         documentName: {
             type: String,
             required: false,
-            default: 'pdf-viewer-document.pdf'
+            default: 'pdf-viewer-document.pdf',
         },
         allowDocumentDownload: {
             type: Boolean,
             required: false,
-            default: false
-        }
+            default: false,
+        },
     },
     data() {
         return {
@@ -107,19 +96,19 @@ export default {
             mdiCropFree,
             pdfViewer: null,
             pdfDocument: null,
-            currentScale: null
+            currentScale: null,
         }
     },
     computed: {
         currentPage() {
-            return (this.pdfViewer) ? this.pdfViewer.currentPageNumber : 0
+            return this.pdfViewer ? this.pdfViewer.currentPageNumber : 0
         },
         pageCount() {
-            return (this.pdfDocument) ? this.pdfDocument.numPages : 0
+            return this.pdfDocument ? this.pdfDocument.numPages : 0
         },
         showPageFitButton() {
             return this.currentScale !== 'page-fit'
-        }
+        },
     },
     watch: {
         currentScale(newVal, oldVal) {
@@ -128,7 +117,7 @@ export default {
                 const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
                 window.dispatchEvent(event)
             }
-        }
+        },
     },
     methods: {
         pageFit() {
@@ -140,7 +129,7 @@ export default {
             newScale = newScale.toFixed(2)
             newScale = Math.floor(newScale * 10) / 10
 
-            this.currentScale = (newScale < MIN_SCALE) ? MIN_SCALE : newScale
+            this.currentScale = newScale < MIN_SCALE ? MIN_SCALE : newScale
         },
         increaseScale() {
             let newScale = this.pdfViewer.currentScale
@@ -148,7 +137,7 @@ export default {
             newScale = newScale.toFixed(2)
             newScale = Math.ceil(newScale * 10) / 10
 
-            this.currentScale = (newScale > MAX_SCALE) ? MAX_SCALE : newScale
+            this.currentScale = newScale > MAX_SCALE ? MAX_SCALE : newScale
         },
         async downloadDocument() {
             if (!this.allowDocumentDownload) {
@@ -169,31 +158,34 @@ export default {
                     this.pdfViewer.downloadManager.downloadUrl(this.source, this.documentName)
                 }
             }
-        }
+        },
     },
     created() {
-        if (this.pdfjsWorkerInstance) {
-            pdfjsLib.GlobalWorkerOptions.workerPort = this.pdfjsWorkerInstance
-        } else if (this.pdfjsWorkerSrc) {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = this.pdfjsWorkerSrc
-        } else {
-            throw new Error('PDFViewer: pdfjsWorkerSrc or pdfjsWorkerInstance needs to be defined.')
-        }
+        pdfjsLib.GlobalWorkerOptions.workerPort = new Worker(
+            new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
+            {
+                type: 'module',
+            },
+        )
     },
     async mounted() {
         try {
-            const eventBus = new pdfjsViewer.EventBus()
-            const downloadManager = new pdfjsViewer.DownloadManager()
-            this.pdfViewer = new pdfjsViewer.PDFViewer({
+            // TODO(Cyrill): Possible that this isn't needed anymore when this PR gets released: https://github.com/mozilla/pdf.js/pull/17255
+            const { EventBus, DownloadManager, PDFViewer } = await import('pdfjs-dist/web/pdf_viewer')
+
+            const eventBus = new EventBus()
+            const downloadManager = new DownloadManager()
+            this.pdfViewer = new PDFViewer({
                 ...this.pdfjsViewerOptions,
                 container: this.$refs.viewerContainer,
+                viewer: this.$refs.viewer,
                 eventBus,
-                downloadManager
+                downloadManager,
             })
 
             const docOptions = {
                 cMapUrl: this.pdfjsCMapUrl,
-                cMapPacked: true
+                cMapPacked: true,
             }
 
             if (this.source instanceof Uint8Array) {
@@ -223,6 +215,6 @@ export default {
             this.$emit('error', error)
             throw error
         }
-    }
+    },
 }
 </script>

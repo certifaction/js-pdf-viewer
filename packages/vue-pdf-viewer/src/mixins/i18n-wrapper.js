@@ -29,6 +29,6 @@ export default {
                 return this.$n(value, ...args)
             }
             return false
-        }
-    }
+        },
+    },
 }
