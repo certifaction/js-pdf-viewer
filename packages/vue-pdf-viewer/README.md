@@ -1,6 +1,5 @@
 # @certifaction/vue-pdf-viewer
 
-[![npm][npm]][npm-url]
 [![lerna][lerna]][lerna-url]
 
 PDF-Viewer for Vue.js based on Mozillas PDF.js
@@ -21,9 +20,6 @@ PDF-Viewer for Vue.js based on Mozillas PDF.js
 
 ```shell script
 npm install @certifaction/vue-pdf-viewer
-
-# or if using yarn
-yarn add @certifaction/vue-pdf-viewer
 ```
 
 ## Usage
@@ -71,65 +67,10 @@ new VueI18n({
 ### Load stylesheet
 
 ```scss
-$pdf-viewer-asset-base-path: "/node_modules/@certifaction/pdfjs/dist/";
 @import "@certifaction/vue-pdf-viewer/src/style/index";
 ```
 
 ## Props
-
-### pdfjsWorkerSrc
-
-Type: `string` | Required: `false` (either [`pdfjsWorkerSrc`](#pdfjsworkersrc) or [`pdfjsWorkerInstance`](#pdfjsworkerinstance) is required)
-
-URL to the pdfjs.worker.js or pdfjs.worker.min.js.
-
-### pdfjsWorkerInstance
-
-Type: `Worker` | Required: `false` (either [`pdfjsWorkerInstance`](#pdfjsworkerinstance) or [`pdfjsWorkerSrc`](#pdfjsworkersrc) is required)
-
-When the worker is loaded with the Webpack [worker-loader](https://www.npmjs.com/package/worker-loader), you can also pass the instance of the worker.
-
-vue.config.js example:
-```js
-chainWebpack: config => {
-    config.module
-        .rule('js')
-        .exclude.add(/\.worker\.js$/)
-
-    config.module
-        .rule('worker')
-        .test(/\.worker(\.min)?\.js$/)
-        .use('worker-loader')
-        .loader('worker-loader')
-        .options({ filename: 'js/[name].[hash:8].js' })
-        .end()
-}
-```
-
-Usage example:
-```vue
-<template>
-    <div class="test">
-        <PDFViewer :pdfjs-worker-instance="pdfjsWorker"/>
-    </div>
-</template>
-
-<script>
-import PdfjsWorker from '@certifaction/pdfjs/dist/pdfjs.worker.min'
-
-export default {
-    name: 'Test',
-    components: {
-        PDFViewer
-    },
-    data() {
-        return {
-            pdfjsWorker: new PdfjsWorker()
-        }
-    }
-}
-</script>
-```
 
 ### pdfjsCMapUrl
 
@@ -137,20 +78,24 @@ Type: `string` | Required: `true`
 
 Pass the path where the cmaps can be accessed.
 
-vue.config.js example to copy the cmaps to the dist folder:
+vite.config.js example to copy the cmaps to the dist folder:
 ```js
-chainWebpack: config => {
-    config.plugin('copy')
-        .tap(args => {
-            args[0].push({
-                from: '@certifaction/pdfjs/dist/cmaps',
-                to: 'pdf/cmaps',
-                toType: 'dir',
-                context: './node_modules'
-            })
-            return args
-        })
-}
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+
+export default defineConfig({
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: normalizePath(
+              resolve(dirname(fileURLToPath(import.meta.url)), './node_modules/pdfjs-dist/cmaps/*'),
+          ),
+          dest: 'pdf/cmaps/',
+        },
+      ],
+    }),
+  ],
+})
 ```
 
 ### source
@@ -196,7 +141,5 @@ Possible options are the PDFViewerOptions from [https://github.com/mozilla/pdf.j
 
 Released by [Certifaction AG](https://certifaction.com)
 
-[npm]: https://img.shields.io/npm/v/@certifaction/vue-pdf-viewer.svg
-[npm-url]: https://www.npmjs.com/package/@certifaction/vue-pdf-viewer
 [lerna]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
 [lerna-url]: https://lerna.js.org/
