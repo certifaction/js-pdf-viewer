@@ -30,9 +30,9 @@
         "vue-i18n": "^8.28"
     },
     "devDependencies": {
-        "@rushstack/eslint-patch": "^1.5.1",
+        "@rushstack/eslint-patch": "^1.6.0",
         "@vue/eslint-config-prettier": "^8.0.0",
-        "eslint": "^8.53.0",
+        "eslint": "^8.54.0",
         "eslint-config-standard": "^17.1.0",
         "eslint-plugin-vue": "^9.18.1",
         "vue": "^2.7.15"

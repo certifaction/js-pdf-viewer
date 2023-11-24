@@ -45,9 +45,9 @@ jobs:
               run: |
                   npm config set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
                   if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} ]; then
-                      npx lerna publish from-package --dist-tag next --yes
+                      npx lerna publish from-package --dist-tag v1-next --yes
                   else
-                      npx lerna publish from-package --yes
+                      npx lerna publish from-package --dist-tag v1-latest --yes
                   fi
 
             - name: Create GitHub release

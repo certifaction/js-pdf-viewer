@@ -9,7 +9,9 @@
         <slot name="after-viewer-container" />
         <div class="controls" ref="viewerControls">
             <div class="pages">
-                <span class="current">{{ currentPage }}</span> {{ _$t('pdfViewer.pageOf') }}
+                {{ _$t('pdfViewer.page') }}
+                <span class="current">{{ currentPage }}</span>
+                {{ _$t('pdfViewer.pageOf') }}
                 <span class="total">{{ pageCount }}</span>
             </div>
             <div class="actions">
