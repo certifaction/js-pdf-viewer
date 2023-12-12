@@ -1,6 +1,6 @@
 {
     "name": "@certifaction/vue-pdf-viewer",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
     "homepage": "https://certifaction.com",
     "license": "MIT",
