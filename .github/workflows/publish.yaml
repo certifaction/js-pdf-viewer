@@ -47,7 +47,7 @@ jobs:
                   if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} ]; then
                       npx lerna publish from-package --dist-tag next --yes
                   else
-                      npx lerna publish from-package --yes
+                      npx lerna publish from-package --dist-tag latest --yes
                   fi
 
             - name: Create GitHub release

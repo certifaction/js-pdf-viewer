@@ -158,7 +158,9 @@ onMounted(async () => {
         <slot name="after-viewer-container" />
         <div ref="viewerControls" class="controls">
             <div class="pages">
-                <span class="current">{{ state.currentPage }}</span> {{ t('pdfViewer.pageOf') }}
+                {{ t('pdfViewer.page') }}
+                <span class="current">{{ state.currentPage }}</span>
+                {{ t('pdfViewer.pageOf') }}
                 <span class="total">{{ state.pagesCount }}</span>
             </div>
             <div class="actions">
