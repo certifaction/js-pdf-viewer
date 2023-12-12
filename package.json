@@ -19,9 +19,9 @@
     "devDependencies": {
         "@certifaction/prettier-config": "^3.1.1",
         "lerna": "^8.0.0",
-        "prettier": "^3.1.0"
+        "prettier": "^3.1.1"
     },
     "volta": {
-        "node": "21.2.0"
+        "node": "21.4.0"
     }
 }
