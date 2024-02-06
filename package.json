@@ -17,11 +17,11 @@
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && npm install"
     },
     "devDependencies": {
-        "@certifaction/prettier-config": "^3.1.1",
-        "lerna": "^8.0.0",
-        "prettier": "^3.1.1"
+        "@certifaction/prettier-config": "^4.0.2",
+        "lerna": "^8.1.2",
+        "prettier": "^3.2.5"
     },
     "volta": {
-        "node": "21.4.0"
+        "node": "21.6.1"
     }
 }
