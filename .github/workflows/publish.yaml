@@ -27,9 +27,9 @@ jobs:
                   cache: 'npm'
 
             - name: Extract version
-              uses: jozsefsallai/node-package-version@master
-              with:
-                  path: 'lerna.json'
+              run: |
+                  PACKAGE_VERSION=$(node -p "require('./lerna.json').version")
+                  echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
             - name: Configure Git user
               run: |
