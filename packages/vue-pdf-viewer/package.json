@@ -23,18 +23,18 @@
     },
     "dependencies": {
         "@mdi/js": "^7.4.47",
-        "pdfjs-dist": "^4.0.379"
+        "pdfjs-dist": "^4.2.67"
     },
     "peerDependencies": {
         "vue": "^3.4",
-        "vue-i18n": "^9.7"
+        "vue-i18n": "^9.13"
     },
     "devDependencies": {
-        "@rushstack/eslint-patch": "^1.10.1",
+        "@rushstack/eslint-patch": "^1.10.2",
         "@vue/eslint-config-prettier": "^9.0.0",
         "eslint": "^8.57.0",
         "eslint-config-standard": "^17.1.0",
-        "eslint-plugin-vue": "^9.24.0",
-        "vue": "^3.4.21"
+        "eslint-plugin-vue": "^9.25.0",
+        "vue": "^3.4.26"
     }
 }
