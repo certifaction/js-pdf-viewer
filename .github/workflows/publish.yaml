@@ -23,7 +23,7 @@ jobs:
             - name: Setup NodeJS
               uses: actions/setup-node@v4
               with:
-                  node-version: '21'
+                  node-version: '22'
                   cache: 'npm'
 
             - name: Extract version
