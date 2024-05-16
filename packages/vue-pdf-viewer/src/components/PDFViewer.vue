@@ -161,6 +161,24 @@ export default {
                 }
             }
         },
+        async getPdfData() {
+            return await this.pdfDocument.saveDocument()
+        },
+        async hasForm() {
+            const formFields = await this.pdfDocument.getFieldObjects()
+            const metadata = await this.pdfDocument.getMetadata()
+
+            // Check if there are fields and if some are not signatures
+            return (
+                metadata?.info?.IsAcroFormPresent &&
+                Object.values(formFields ?? {}).some((arr) => arr.some((field) => field.type !== 'signature'))
+            )
+        },
+        async formValuesHaveChanged() {
+            if (!this.hasForm || this.pdfDocument === undefined) return false
+            const currentFormValues = await this.pdfDocument.annotationStorage.getAll()
+            return currentFormValues !== null
+        },
     },
     created() {
         pdfjsLib.GlobalWorkerOptions.workerPort = new Worker(
