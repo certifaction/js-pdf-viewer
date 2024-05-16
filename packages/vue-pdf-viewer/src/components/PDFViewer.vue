@@ -175,7 +175,7 @@ export default {
             )
         },
         async formValuesHaveChanged() {
-            if (!this.hasForm || this.pdfDocument === undefined) return
+            if (!this.hasForm || this.pdfDocument === undefined) return false
             const currentFormValues = await this.pdfDocument.annotationStorage.getAll()
             return currentFormValues !== null
         },
