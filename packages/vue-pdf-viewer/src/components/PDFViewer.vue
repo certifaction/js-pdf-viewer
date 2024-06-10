@@ -38,9 +38,13 @@
 
 <script>
 import { mdiCropFree, mdiDownload, mdiMinus, mdiPlus } from '@mdi/js'
-import * as pdfjsLib from 'pdfjs-dist'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
 import MDIcon from './MDIcon.vue'
+
+let useLegacyPdfJsBuild = false
+if (typeof Promise.withResolvers !== 'function') {
+    useLegacyPdfJsBuild = true
+}
 
 const MIN_SCALE = 0.1
 const MAX_SCALE = 10
@@ -180,18 +184,29 @@ export default {
             return currentFormValues !== null
         },
     },
-    created() {
-        pdfjsLib.GlobalWorkerOptions.workerPort = new Worker(
-            new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
-            {
-                type: 'module',
-            },
-        )
+    async created() {
+        if (useLegacyPdfJsBuild) {
+            const { GlobalWorkerOptions } = await import('pdfjs-dist/legacy/build/pdf.mjs')
+            GlobalWorkerOptions.workerPort = new Worker(
+                new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url),
+                { type: 'module' },
+            )
+        } else {
+            const { GlobalWorkerOptions } = await import('pdfjs-dist')
+            GlobalWorkerOptions.workerPort = new Worker(
+                new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
+                { type: 'module' },
+            )
+        }
     },
     async mounted() {
         try {
-            // TODO(Cyrill): Possible that this isn't needed anymore when this PR gets released: https://github.com/mozilla/pdf.js/pull/17255
-            const { EventBus, DownloadManager, PDFViewer } = await import('pdfjs-dist/web/pdf_viewer')
+            const { getDocument } = useLegacyPdfJsBuild
+                ? await import('pdfjs-dist/legacy/build/pdf.mjs')
+                : await import('pdfjs-dist')
+            const { EventBus, DownloadManager, PDFViewer } = useLegacyPdfJsBuild
+                ? await import('pdfjs-dist/legacy/web/pdf_viewer.mjs')
+                : await import('pdfjs-dist/web/pdf_viewer.mjs')
 
             const eventBus = new EventBus()
             const downloadManager = new DownloadManager()
@@ -214,7 +229,7 @@ export default {
                 docOptions.url = this.source
             }
 
-            const documentLoadingTask = pdfjsLib.getDocument(docOptions)
+            const documentLoadingTask = getDocument(docOptions)
             this.pdfDocument = await documentLoadingTask.promise
 
             const event = new Event('PDFViewer:documentLoaded')
