@@ -140,7 +140,7 @@ export class PdfJsHelper {
             return false
         }
 
-        const currentFormValues = await pdfDocument.annotationStorage.getAll()
+        const currentFormValues = pdfDocument.annotationStorage.getAll()
 
         return currentFormValues !== null
     }
