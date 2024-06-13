@@ -137,7 +137,7 @@ export default {
         },
     },
     created() {
-        this.pdfJsHelper = PdfJsHelper.getInstance(this.props.pdfjsCMapUrl)
+        this.pdfJsHelper = PdfJsHelper.getInstance(this.pdfjsCMapUrl)
     },
     async mounted() {
         try {

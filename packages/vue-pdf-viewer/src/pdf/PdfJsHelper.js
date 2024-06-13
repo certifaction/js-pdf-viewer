@@ -105,6 +105,14 @@ export class PdfJsHelper {
 
     /**
      * @param {PDFDocumentProxy} pdfDocument
+     * @returns {Promise<Uint8Array>}
+     */
+    async getPdfData(pdfDocument) {
+        return await pdfDocument.saveDocument()
+    }
+
+    /**
+     * @param {PDFDocumentProxy} pdfDocument
      * @returns {Promise<boolean>}
      */
     async hasForm(pdfDocument) {
