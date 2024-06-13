@@ -1,3 +1,2 @@
-import PDFViewer from './components/PDFViewer.vue'
-
-export default PDFViewer
+export * from './pdf/PdfJsHelper.js'
+export { default as PdfViewer } from './components/PdfViewer.vue'

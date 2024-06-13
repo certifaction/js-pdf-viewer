@@ -27,11 +27,11 @@ npm install @certifaction/vue-pdf-viewer
 ### ES6
 
 ```js
-import PDFViewer from '@certifaction/vue-pdf-viewer'
+import { PdfViewer } from '@certifaction/vue-pdf-viewer'
 
 new Vue({
     components: {
-        PDFViewer
+        PdfViewer
     }
 })
 ```
@@ -100,7 +100,7 @@ export default defineConfig({
 
 ### source
 
-Type: `string` or `Uint8Array` | Required: `true`
+Type: `string`, `Uint8Array` or `PDFDocumentProxy` | Required: `true`
 
 The URL of the PDF document as `string` or the PDF documents content as `Uint8Array` which should be displayed.
 
@@ -113,18 +113,6 @@ The PDF Viewer renders the pages initially with the defined defaulScale.
 Possible `number` values: Min = `0.1`, Max = `10`
 
 Possible `string` values: `'auto'`, `'page-actual',` `'page-fit'`, `'page-width'`
-
-### documentName
-
-Type: `string` | Required: `false` | Default: `'pdf-viewer-document.pdf'`
-
-The documentName is used for downloadable files.
-
-### allowDocumentDownload
-
-Type: `boolean` | Required: `false` | Default: `false`
-
-Shows the document download button if `true`
 
 ### pdfjsViewerOptions
 
