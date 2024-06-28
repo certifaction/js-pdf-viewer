@@ -1,6 +1,7 @@
 {
     "name": "@certifaction/js-pdf-viewer",
     "private": true,
+    "type": "module",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/certifaction/js-pdf-viewer.git"
@@ -13,15 +14,15 @@
     ],
     "scripts": {
         "lint": "lerna run lint",
+        "type-check": "lerna run type-check",
         "create-version": "lerna version --no-git-tag-version --no-push && npm install",
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && npm install"
     },
     "devDependencies": {
-        "@certifaction/prettier-config": "^6.2.2",
-        "lerna": "^8.1.3",
-        "prettier": "^3.3.0"
+        "@certifaction/vue3-webapp-config": "^7.0.0",
+        "lerna": "^8.1.5"
     },
     "volta": {
-        "node": "22.2.0"
+        "node": "22.3.0"
     }
 }
