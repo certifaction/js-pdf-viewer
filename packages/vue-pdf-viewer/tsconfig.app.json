@@ -1,0 +1,9 @@
+{
+    "extends": "@certifaction/ts-config/tsconfig.app.json",
+    "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.json", "test/**/*"],
+    "exclude": ["test/**/*", "src/**/*.test.ts"],
+    "compilerOptions": {
+        "baseUrl": "../..",
+        "jsxImportSource": ""
+    }
+}

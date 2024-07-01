@@ -1,148 +1,132 @@
-<script setup>
-import { onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { mdiMinus, mdiPlus, mdiCropFree } from '@mdi/js'
-import * as pdfjsLib from 'pdfjs-dist'
-import MDIcon from './MDIcon.vue'
+<script lang="ts">
+import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { type PDFDocumentProxy } from 'pdfjs-dist'
+import { type PDFViewer, type PDFPageView, type PDFViewerOptions } from 'pdfjs-dist/web/pdf_viewer.mjs'
+import {
+    type PageChangeEvent,
+    type PagesLoadedEvent,
+    PdfJsHelper,
+    Scale,
+    type ScaleChangeEvent,
+} from '../pdf/PdfJsHelper'
 
-const { t } = useI18n()
+export interface PdfViewerProps {
+    source: string | Uint8Array | PDFDocumentProxy | undefined
+    translate: (key: string) => string
+    defaultScale?: Scale | number
+    pdfjsViewerOptions?: Omit<PDFViewerOptions, 'container' | 'eventBus'>
+    pdfjsCMapUrl: string
+}
 
-const MIN_SCALE = 0.1
-const MAX_SCALE = 10
+interface PdfViewerState {
+    pagesCount: number
+    currentPage: number
+    showPageFitButton: boolean
+}
+</script>
 
-// Props
-const props = defineProps({
-    pdfjsCMapUrl: {
-        type: String,
-        required: true,
-    },
-    source: {
-        required: true,
-        validator: (value) => {
-            return !!value && (typeof value === 'string' || value instanceof Uint8Array)
-        },
-    },
-    pdfjsViewerOptions: {
-        type: Object,
-        default: function () {
-            return {}
-        },
-    },
-    defaultScale: {
-        required: false,
-        validator: (value) => {
-            if (typeof value === 'string') {
-                return !!value && ['auto', 'page-actual', 'page-fit', 'page-width'].includes(value)
-            } else {
-                return !!value && typeof value === 'number'
-            }
-        },
-        default: 'auto',
-    },
+<script lang="ts" setup>
+import { iconPlus, iconFit, iconMinus } from '../icons'
+import CIcon from './CIcon.vue'
+
+const props = withDefaults(defineProps<PdfViewerProps>(), {
+    defaultScale: Scale.Auto,
+    pdfjsViewerOptions: () => ({}),
 })
+const emit = defineEmits<{
+    documentLoaded: []
+    pagesLoaded: [pages: PDFPageView[]]
+    scaleChange: [currentScale: number]
+    error: [error: unknown]
+}>()
 
-// Events
-const emit = defineEmits(['error'])
-
-// Reactive data
-const state = ref({
+const state = ref<PdfViewerState>({
     pagesCount: 1,
     currentPage: 1,
     showPageFitButton: false,
 })
 
-// Template refs
-const viewerContainer = ref(null)
-const viewer = ref(null)
-const viewerControls = ref(null)
+const viewerContainer = ref<HTMLDivElement | null>(null)
+const viewer = ref<HTMLDivElement | null>(null)
+const viewerControls = ref<HTMLDivElement | null>(null)
 
-// Non-reactive data
-let pdfViewer = null
-let pdfDocument = null
+const pdfJsHelper = PdfJsHelper.getInstance(props.pdfjsCMapUrl)
+let pdfViewer: PDFViewer
 
-pdfjsLib.GlobalWorkerOptions.workerPort = new Worker(new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url), {
-    type: 'module',
+const pageFit = (): void => {
+    pdfViewer.currentScaleValue = Scale.PageFit
+}
+
+const decreaseScale = (): void => {
+    pdfViewer.decreaseScale()
+}
+
+const increaseScale = (): void => {
+    pdfViewer.increaseScale()
+}
+
+const handlePagesLoaded = (pagesLoadedEvent: PagesLoadedEvent) => {
+    pdfViewer.currentScaleValue = props.defaultScale.toString()
+    state.value.pagesCount = pagesLoadedEvent.pagesCount
+
+    if (viewerContainer.value && viewerControls.value) {
+        const scrollbarWidth = viewerContainer.value.offsetWidth - viewerContainer.value.clientWidth
+        viewerControls.value.style.width = `calc(100% - ${scrollbarWidth}px)`
+    }
+
+    if (pagesLoadedEvent.source._pages) {
+        emit('pagesLoaded', pagesLoadedEvent.source._pages)
+    }
+}
+
+const handlePageChanging = (pageChangingEvent: PageChangeEvent) => {
+    state.value.currentPage = pageChangingEvent.pageNumber
+}
+
+const handleScaleChanging = (scaleChangingEvent: ScaleChangeEvent) => {
+    state.value.showPageFitButton = scaleChangingEvent.presetValue !== Scale.PageFit
+
+    emit('scaleChange', pdfViewer.currentScale)
+}
+
+watchEffect(async () => {
+    if (!props.source || !pdfViewer) {
+        return
+    }
+
+    if (props.source instanceof Uint8Array || typeof props.source === 'string') {
+        const pdfDocument = await pdfJsHelper.loadDocument(props.source)
+        pdfViewer.setDocument(pdfDocument)
+    } else {
+        pdfViewer.setDocument(props.source)
+    }
+
+    emit('documentLoaded')
 })
-
-const pageFit = () => {
-    pdfViewer.currentScaleValue = 'page-fit'
-}
-
-const decreaseScale = () => {
-    let newScale = pdfViewer.currentScale
-    newScale -= 0.1
-    newScale = newScale.toFixed(2)
-    newScale = Math.floor(newScale * 10) / 10
-
-    pdfViewer.currentScaleValue = newScale < MIN_SCALE ? MIN_SCALE : newScale
-}
-
-const increaseScale = () => {
-    let newScale = pdfViewer.currentScale
-    newScale += 0.1
-    newScale = newScale.toFixed(2)
-    newScale = Math.ceil(newScale * 10) / 10
-
-    pdfViewer.currentScaleValue = newScale > MAX_SCALE ? MAX_SCALE : newScale
-}
 
 onMounted(async () => {
     try {
-        // TODO(Cyrill): Possible that this isn't needed anymore when this PR gets released: https://github.com/mozilla/pdf.js/pull/17255
-        const { EventBus, PDFViewer } = await import('pdfjs-dist/web/pdf_viewer')
-
-        const eventBus = new EventBus()
-        pdfViewer = new PDFViewer({
-            ...props.pdfjsViewerOptions,
-            container: viewerContainer.value,
-            viewer: viewer.value,
-            eventBus,
-        })
-
-        const docOptions = {
-            cMapUrl: props.pdfjsCMapUrl,
-            cMapPacked: true,
+        if (!viewerContainer.value || !viewer.value || !viewerControls.value) {
+            throw new Error('Viewer container elements are not available')
         }
 
-        if (props.source instanceof Uint8Array) {
-            docOptions.data = new Uint8Array(props.source)
-        } else {
-            docOptions.url = props.source
-        }
+        pdfViewer = await pdfJsHelper.createPdfViewer(props.pdfjsViewerOptions, viewerContainer.value, viewer.value)
 
-        const documentLoadingTask = pdfjsLib.getDocument(docOptions)
-        pdfDocument = await documentLoadingTask.promise
-
-        const event = new Event('PDFViewer:documentLoaded')
-        window.dispatchEvent(event)
-
-        eventBus.on('pagesloaded', (pagesLoadedEvent) => {
-            pdfViewer.currentScaleValue = props.defaultScale
-            state.value.pagesCount = pagesLoadedEvent.pagesCount
-
-            const scrollbarWidth = viewerContainer.value.offsetWidth - viewerContainer.value.clientWidth
-            viewerControls.value.style.width = `calc(100% - ${scrollbarWidth}px)`
-
-            const event = new CustomEvent('PDFViewer:pagesLoaded', {
-                detail: { pages: pagesLoadedEvent.source._pages },
-            })
-            window.dispatchEvent(event)
-        })
-
-        eventBus.on('pagechanging', function (pageChangingEvent) {
-            state.value.currentPage = pageChangingEvent.pageNumber
-        })
-
-        eventBus.on('scalechanging', function (scaleChangingEvent) {
-            state.value.showPageFitButton = scaleChangingEvent.presetValue !== 'page-fit'
-            const event = new CustomEvent('PDFViewer:scaleChange', { detail: { currentScale: pdfViewer.currentScale } })
-            window.dispatchEvent(event)
-        })
-
-        pdfViewer.setDocument(pdfDocument)
-    } catch (error) {
+        pdfViewer.eventBus.on('pagesloaded', handlePagesLoaded)
+        pdfViewer.eventBus.on('pagechanging', handlePageChanging)
+        pdfViewer.eventBus.on('scalechanging', handleScaleChanging)
+    } catch (error: unknown) {
+        console.error('Error while mounting PDFViewer', error)
         emit('error', error)
-        throw error
+    }
+})
+
+onUnmounted(() => {
+    if (pdfViewer) {
+        pdfViewer.eventBus.off('pagesloaded', handlePagesLoaded)
+        pdfViewer.eventBus.off('pagechanging', handlePageChanging)
+        pdfViewer.eventBus.off('scalechanging', handleScaleChanging)
+        pdfViewer.cleanup()
     }
 })
 </script>
@@ -156,26 +140,114 @@ onMounted(async () => {
             <slot name="after-viewer" />
         </div>
         <slot name="after-viewer-container" />
+
         <div ref="viewerControls" class="controls">
             <div class="pages">
-                {{ t('pdfViewer.page') }}
+                {{ props.translate('page') }}
                 <span class="current">{{ state.currentPage }}</span>
-                {{ t('pdfViewer.pageOf') }}
+                {{ props.translate('pageOf') }}
                 <span class="total">{{ state.pagesCount }}</span>
             </div>
+
             <div class="actions">
                 <div class="scale">
                     <div v-if="state.showPageFitButton" class="action-button" @click="pageFit">
-                        <MDIcon :icon="mdiCropFree" />
+                        <CIcon :icon="iconFit" />
                     </div>
                     <div class="action-button" @click="decreaseScale">
-                        <MDIcon :icon="mdiMinus" />
+                        <CIcon :icon="iconMinus" />
                     </div>
                     <div class="action-button" @click="increaseScale">
-                        <MDIcon :icon="mdiPlus" />
+                        <CIcon :icon="iconPlus" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<style lang="scss">
+@use 'pdfjs-dist/web/pdf_viewer';
+
+.pdf-viewer {
+    --pdfviewer-color-controls-font: var(--c-color-grey-600);
+    --pdfviewer-color-controls-background: var(--c-color-grey-200);
+    position: relative;
+
+    .viewer-container {
+        position: absolute;
+        overflow: auto;
+        width: 100%;
+        height: 100%;
+        background-color: var(--c-color-grey-50);
+
+        .pdfViewer {
+            position: relative;
+
+            .page {
+                box-sizing: content-box;
+
+                .canvasWrapper {
+                    box-shadow: var(--c-drop-shadow);
+                }
+            }
+        }
+    }
+
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        z-index: 100;
+        top: 1rem;
+        width: 100%;
+        padding: 0 1.5rem;
+
+        .pages {
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            background: var(--pdfviewer-color-controls-background);
+            color: var(--pdfviewer-color-controls-font);
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+
+            .action-button {
+                position: relative;
+                cursor: pointer;
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                padding: 0.5rem;
+                background: var(--pdfviewer-color-controls-background);
+                color: var(--pdfviewer-color-controls-font);
+
+                .c-icon {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 1.25rem;
+                    margin: auto;
+                }
+            }
+
+            .download {
+                padding-right: 0.5rem;
+            }
+
+            .scale {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    }
+}
+</style>

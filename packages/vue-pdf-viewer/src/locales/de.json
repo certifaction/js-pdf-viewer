@@ -1,6 +1,4 @@
 {
-    "pdfViewer": {
-        "page": "Seite",
-        "pageOf": "von"
-    }
+    "page": "Seite",
+    "pageOf": "von"
 }
