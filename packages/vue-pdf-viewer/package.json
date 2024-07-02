@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@mdi/js": "^7.4.47",
-        "pdfjs-dist": "^4.3.136"
+        "pdfjs-dist": "^4.4.168"
     },
     "peerDependencies": {
         "vue": "^2.7",
@@ -33,7 +33,7 @@
         "@rushstack/eslint-patch": "^1.10.3",
         "@vue/eslint-config-prettier": "^9.0.0",
         "eslint": "^8.57.0",
-        "eslint-plugin-vue": "^9.26.0",
+        "eslint-plugin-vue": "^9.27.0",
         "vue": "^2.7.16"
     }
 }
