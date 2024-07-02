@@ -46,8 +46,10 @@ jobs:
                   npm config set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
                   if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} ]; then
                       npx lerna publish from-package --dist-tag next --yes
+                      npm dist-tag add @certifaction/vue-pdf-viewer@${{ env.PACKAGE_VERSION }} next
                   else
                       npx lerna publish from-package --dist-tag latest --yes
+                      npm dist-tag add @certifaction/vue-pdf-viewer@${{ env.PACKAGE_VERSION }} latest
                   fi
 
             - name: Create GitHub release
