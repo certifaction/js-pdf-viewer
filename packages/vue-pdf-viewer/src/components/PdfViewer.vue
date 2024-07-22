@@ -136,7 +136,7 @@ export default {
             const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
             this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
 
-            if (await this.pdfJsHelper.hasForm(this.pdfDocument)) {
+            if (await this.pdfJsHelper.hasForm(this.pdfDocument) && this.pdfjsViewerOptions.annotationMode === 2) {
               await this.prepareRequiredFormFields()
             }
         },
