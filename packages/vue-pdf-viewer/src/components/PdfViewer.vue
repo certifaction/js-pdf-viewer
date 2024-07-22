@@ -136,51 +136,51 @@ export default {
             const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
             this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
 
-            if (await this.pdfJsHelper.hasForm(this.pdfDocument) && this.pdfjsViewerOptions.annotationMode === 2) {
-              await this.prepareRequiredFormFields()
+            if ((await this.pdfJsHelper.hasForm(this.pdfDocument)) && this.pdfjsViewerOptions.annotationMode === 2) {
+                await this.prepareRequiredFormFields()
             }
         },
-      async prepareRequiredFormFields() {
-          const requiredFormFields = await this.pdfJsHelper.getRequiredFormFields(this.pdfDocument)
+        async prepareRequiredFormFields() {
+            const requiredFormFields = await this.pdfJsHelper.getRequiredFormFields(this.pdfDocument)
 
-          if (requiredFormFields?.length > 0) {
-              requiredFormFields.forEach((formField) => {
-                  const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
-                  this.updateField(formField.id, formField.fieldName, htmlElement.type, htmlElement)
+            if (requiredFormFields?.length > 0) {
+                requiredFormFields.forEach((formField) => {
+                    const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
+                    this.updateField(formField.id, formField.fieldName, htmlElement.type, htmlElement)
 
-                  htmlElement.addEventListener('input', async (event) => {
-                    this.updateField(formField.id, formField.fieldName, event.target.type, event.target)
-                    const formIsValid = await this.validateReactiveFormFields()
-                    this.$emit('required-fields-filled', formIsValid)
-                  })
-              })
+                    htmlElement.addEventListener('input', async (event) => {
+                        this.updateField(formField.id, formField.fieldName, event.target.type, event.target)
+                        const formIsValid = await this.validateReactiveFormFields()
+                        this.$emit('required-fields-filled', formIsValid)
+                    })
+                })
 
-              const formIsValid = await this.validateReactiveFormFields()
-              this.$emit('required-fields-filled', formIsValid)
-          }
-      },
-      async updateField(fieldId, fieldName, fieldType, htmlElement) {
-          let fieldValue
+                const formIsValid = await this.validateReactiveFormFields()
+                this.$emit('required-fields-filled', formIsValid)
+            }
+        },
+        async updateField(fieldId, fieldName, fieldType, htmlElement) {
+            let fieldValue
 
-          switch(fieldType) {
-              case 'radio':
-              case 'checkbox':
-                fieldValue = htmlElement.checked
-                break
-              default:
-                fieldValue = htmlElement.value
-                break
-          }
+            switch (fieldType) {
+                case 'radio':
+                case 'checkbox':
+                    fieldValue = htmlElement.checked
+                    break
+                default:
+                    fieldValue = htmlElement.value
+                    break
+            }
 
-          this.$set(this.requiredFormFieldsFilled, fieldId, { fieldName, fieldValue})
-      },
-      async validateReactiveFormFields() {
-          const transformedRequiredFields = Object.keys(this.requiredFormFieldsFilled).map(key => {
-              return { fieldId: key, ...this.requiredFormFieldsFilled[key] };
-          })
+            this.$set(this.requiredFormFieldsFilled, fieldId, { fieldName, fieldValue })
+        },
+        async validateReactiveFormFields() {
+            const transformedRequiredFields = Object.keys(this.requiredFormFieldsFilled).map((key) => {
+                return { fieldId: key, ...this.requiredFormFieldsFilled[key] }
+            })
 
-          return await this.pdfJsHelper.validateRequiredFields(this.pdfDocument, transformedRequiredFields)
-      }
+            return await this.pdfJsHelper.validateRequiredFields(this.pdfDocument, transformedRequiredFields)
+        },
     },
     created() {
         this.pdfJsHelper = PdfJsHelper.getInstance(this.pdfjsCMapUrl)
