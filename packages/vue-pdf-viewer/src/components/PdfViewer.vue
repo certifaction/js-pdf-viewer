@@ -85,6 +85,7 @@ export default {
             pdfDocument: null,
             currentScale: null,
             requiredFormFieldsFilled: {},
+            formEventListeners: [],
         }
     },
     computed: {
@@ -96,6 +97,9 @@ export default {
         },
         showPageFitButton() {
             return this.currentScale !== 'page-fit'
+        },
+        transformedRequiredFormFieldsFilled() {
+            return Object.values(this.requiredFormFieldsFilled)
         },
     },
     watch: {
@@ -143,19 +147,26 @@ export default {
         async prepareRequiredFormFields() {
             const requiredFormFields = await this.pdfJsHelper.getRequiredFormFields(this.pdfDocument)
 
-            if (requiredFormFields?.length > 0) {
+            if (requiredFormFields.length > 0) {
                 requiredFormFields.forEach((formField) => {
                     const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
                     this.updateField(formField.id, formField.fieldName, htmlElement.type, htmlElement)
 
-                    htmlElement.addEventListener('input', async (event) => {
+                    const eventListener = async (event) => {
                         this.updateField(formField.id, formField.fieldName, event.target.type, event.target)
-                        const formIsValid = await this.validateReactiveFormFields()
+                        const formIsValid = await this.pdfJsHelper.validateRequiredFields(
+                            this.transformedRequiredFormFieldsFilled,
+                        )
                         this.$emit('required-fields-filled', formIsValid)
-                    })
+                    }
+
+                    htmlElement.addEventListener('input', eventListener)
+                    this.formEventListeners.push({ element: htmlElement, listener: eventListener })
                 })
 
-                const formIsValid = await this.validateReactiveFormFields()
+                const formIsValid = await this.pdfJsHelper.validateRequiredFields(
+                    this.transformedRequiredFormFieldsFilled,
+                )
                 this.$emit('required-fields-filled', formIsValid)
             }
         },
@@ -174,12 +185,11 @@ export default {
 
             this.$set(this.requiredFormFieldsFilled, fieldId, { fieldName, fieldValue })
         },
-        async validateReactiveFormFields() {
-            const transformedRequiredFields = Object.keys(this.requiredFormFieldsFilled).map((key) => {
-                return { fieldId: key, ...this.requiredFormFieldsFilled[key] }
+        removeFormEventListeners() {
+            this.formEventListeners.forEach(({ element, listener }) => {
+                element.removeEventListener('input', listener)
             })
-
-            return await this.pdfJsHelper.validateRequiredFields(this.pdfDocument, transformedRequiredFields)
+            this.formEventListeners = []
         },
     },
     created() {
@@ -211,6 +221,7 @@ export default {
         }
     },
     beforeDestroy() {
+        this.removeFormEventListeners()
         if (this.pdfViewer) {
             this.pdfViewer.eventBus.off('pagesloaded', this.onPagesLoaded)
             this.pdfViewer.cleanup()
