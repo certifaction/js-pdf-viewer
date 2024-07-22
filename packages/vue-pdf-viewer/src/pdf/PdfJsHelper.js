@@ -166,9 +166,9 @@ export class PdfJsHelper {
         const requiredFormFields = []
 
         for (let i = 1; i <= pageCount; i++) {
-            const page = await pdfDocument.getPage(i);
+            const page = await pdfDocument.getPage(i)
             const annotations = await page.getAnnotations()
-            Object.values(annotations).forEach(annotation => {
+            Object.values(annotations).forEach((annotation) => {
                 if (annotation.required && annotation.subtype === 'Widget') {
                     requiredFormFields.push(annotation)
                 }
@@ -181,7 +181,7 @@ export class PdfJsHelper {
     /**
      * @param {PDFDocumentProxy} pdfDocument
      * @param {RequiredField[]} requiredFields
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<boolean>}
      */
     async validateRequiredFields(pdfDocument, requiredFields) {
         if (!(await this.hasForm(pdfDocument))) {
@@ -193,7 +193,9 @@ export class PdfJsHelper {
         requiredFields.forEach((requiredField) => {
             // Groups like choices have the same fieldName, so there just one needs to be selected
             const sameFieldNameFields = requiredFields.filter((ff) => ff.fieldName === requiredField.fieldName)
-            const isEmpty = sameFieldNameFields.every(ff => ff.fieldValue === null || ff.fieldValue === false || ff.fieldValue === "")
+            const isEmpty = sameFieldNameFields.every(
+                (ff) => ff.fieldValue === null || ff.fieldValue === false || ff.fieldValue === '',
+            )
             if (isEmpty) {
                 hasEmptyRequiredFields = true
             }
