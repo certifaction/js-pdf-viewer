@@ -84,6 +84,8 @@ export default {
             /** @type {PDFDocumentProxy} */
             pdfDocument: null,
             currentScale: null,
+            requiredFormFieldsFilled: {},
+            formEventListeners: [],
         }
     },
     computed: {
@@ -95,6 +97,9 @@ export default {
         },
         showPageFitButton() {
             return this.currentScale !== 'page-fit'
+        },
+        transformedRequiredFormFieldsFilled() {
+            return Object.values(this.requiredFormFieldsFilled)
         },
     },
     watch: {
@@ -126,7 +131,7 @@ export default {
 
             this.currentScale = newScale > MAX_SCALE ? MAX_SCALE : newScale
         },
-        onPagesLoaded() {
+        async onPagesLoaded() {
             this.pdfViewer.currentScaleValue = this.currentScale = this.defaultScale
 
             const event = new Event('PDFViewer:pagesLoaded')
@@ -134,6 +139,57 @@ export default {
 
             const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
             this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
+
+            if ((await this.pdfJsHelper.hasForm(this.pdfDocument)) && this.pdfjsViewerOptions.annotationMode === 2) {
+                await this.prepareRequiredFormFields()
+            }
+        },
+        async prepareRequiredFormFields() {
+            const requiredFormFields = await this.pdfJsHelper.getRequiredFormFields(this.pdfDocument)
+
+            if (requiredFormFields.length > 0) {
+                requiredFormFields.forEach((formField) => {
+                    const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
+                    this.updateField(formField.id, formField.fieldName, htmlElement.type, htmlElement)
+
+                    const eventListener = async (event) => {
+                        this.updateField(formField.id, formField.fieldName, event.target.type, event.target)
+                        const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
+                            this.transformedRequiredFormFieldsFilled,
+                        )
+                        this.$emit('required-fields-filled', allRequiredFieldsFilled)
+                    }
+
+                    htmlElement.addEventListener('input', eventListener)
+                    this.formEventListeners.push({ element: htmlElement, listener: eventListener })
+                })
+
+                const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
+                    this.transformedRequiredFormFieldsFilled,
+                )
+                this.$emit('required-fields-filled', allRequiredFieldsFilled)
+            }
+        },
+        async updateField(fieldId, fieldName, fieldType, htmlElement) {
+            let fieldValue
+
+            switch (fieldType) {
+                case 'radio':
+                case 'checkbox':
+                    fieldValue = htmlElement.checked
+                    break
+                default:
+                    fieldValue = htmlElement.value
+                    break
+            }
+
+            this.$set(this.requiredFormFieldsFilled, fieldId, { fieldName, fieldValue })
+        },
+        removeFormEventListeners() {
+            this.formEventListeners.forEach(({ element, listener }) => {
+                element.removeEventListener('input', listener)
+            })
+            this.formEventListeners = []
         },
     },
     created() {
@@ -165,6 +221,7 @@ export default {
         }
     },
     beforeDestroy() {
+        this.removeFormEventListeners()
         if (this.pdfViewer) {
             this.pdfViewer.eventBus.off('pagesloaded', this.onPagesLoaded)
             this.pdfViewer.cleanup()

@@ -6,6 +6,14 @@
  */
 
 /**
+ * Manual type definition for parameter "RequiredField"
+ * @typedef {Object} RequiredField
+ * @property {string} fieldName
+ * @property {string | boolean} fieldValue
+ * @property {string} [fieldId]
+ */
+
+/**
  * Manual type definition for EventBus "pagesloaded"
  * @typedef {Object} PagesLoadedEvent
  * @property {PDFViewer} source
@@ -143,6 +151,52 @@ export class PdfJsHelper {
         const currentFormValues = pdfDocument.annotationStorage.getAll()
 
         return currentFormValues !== null
+    }
+
+    /**
+     * @param {PDFDocumentProxy} pdfDocument
+     * @returns {Promise<Array<any>>}
+     */
+    async getRequiredFormFields(pdfDocument) {
+        if (!(await this.hasForm(pdfDocument))) {
+            return []
+        }
+
+        const pageCount = pdfDocument.numPages
+        const requiredFormFields = []
+
+        for (let i = 1; i <= pageCount; i++) {
+            const page = await pdfDocument.getPage(i)
+            const annotations = await page.getAnnotations()
+            Object.values(annotations).forEach((annotation) => {
+                if (annotation.required && annotation.subtype === 'Widget') {
+                    requiredFormFields.push(annotation)
+                }
+            })
+        }
+
+        return requiredFormFields
+    }
+
+    /**
+     * @param {RequiredField[]} requiredFields
+     * @returns {Promise<boolean>}
+     */
+    async allRequiredFieldsFilled(requiredFields) {
+        let hasEmptyRequiredFields = false
+
+        requiredFields.forEach((requiredField) => {
+            // Groups like choices have the same fieldName, so there just one needs to be selected
+            const sameFieldNameFields = requiredFields.filter((ff) => ff.fieldName === requiredField.fieldName)
+            const isEmpty = sameFieldNameFields.every(
+                (ff) => ff.fieldValue === null || ff.fieldValue === false || ff.fieldValue === '',
+            )
+            if (isEmpty) {
+                hasEmptyRequiredFields = true
+            }
+        })
+
+        return !hasEmptyRequiredFields
     }
 
     /**
