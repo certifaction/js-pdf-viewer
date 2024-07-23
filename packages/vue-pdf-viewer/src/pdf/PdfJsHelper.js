@@ -155,7 +155,7 @@ export class PdfJsHelper {
 
     /**
      * @param {PDFDocumentProxy} pdfDocument
-     * @returns {Promise<Array>}
+     * @returns {Promise<Array<any>>}
      */
     async getRequiredFormFields(pdfDocument) {
         if (!(await this.hasForm(pdfDocument))) {
@@ -182,7 +182,7 @@ export class PdfJsHelper {
      * @param {RequiredField[]} requiredFields
      * @returns {Promise<boolean>}
      */
-    async validateRequiredFields(requiredFields) {
+    async allRequiredFieldsFilled(requiredFields) {
         let hasEmptyRequiredFields = false
 
         requiredFields.forEach((requiredField) => {

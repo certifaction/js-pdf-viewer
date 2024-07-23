@@ -154,20 +154,20 @@ export default {
 
                     const eventListener = async (event) => {
                         this.updateField(formField.id, formField.fieldName, event.target.type, event.target)
-                        const formIsValid = await this.pdfJsHelper.validateRequiredFields(
+                        const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
                             this.transformedRequiredFormFieldsFilled,
                         )
-                        this.$emit('required-fields-filled', formIsValid)
+                        this.$emit('required-fields-filled', allRequiredFieldsFilled)
                     }
 
                     htmlElement.addEventListener('input', eventListener)
                     this.formEventListeners.push({ element: htmlElement, listener: eventListener })
                 })
 
-                const formIsValid = await this.pdfJsHelper.validateRequiredFields(
+                const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
                     this.transformedRequiredFormFieldsFilled,
                 )
-                this.$emit('required-fields-filled', formIsValid)
+                this.$emit('required-fields-filled', allRequiredFieldsFilled)
             }
         },
         async updateField(fieldId, fieldName, fieldType, htmlElement) {
