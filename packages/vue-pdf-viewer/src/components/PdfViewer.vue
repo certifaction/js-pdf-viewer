@@ -142,30 +142,15 @@ export default {
         },
         async onAnnotationLayerRendered() {
             if ((await this.pdfJsHelper.hasForm(this.pdfDocument)) && this.pdfjsViewerOptions.annotationMode === 2) {
-                this.removeFormEventListeners()
                 await this.prepareRequiredFormFields()
             }
         },
         async prepareRequiredFormFields() {
-            const requiredFormFields = await this.pdfJsHelper.getRequiredFormFields(this.pdfDocument)
+            const formFieldsToListen = await this.pdfJsHelper.getFormFieldsToListen(this.pdfDocument)
 
-            if (requiredFormFields.length > 0) {
-                requiredFormFields.forEach((formField) => {
-                    const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
-                    if (htmlElement) {
-                        this.updateField(formField.id, formField.fieldName, htmlElement.type, htmlElement)
-
-                        const eventListener = async (event) => {
-                            this.updateField(formField.id, formField.fieldName, event.target.type, event.target)
-                            const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
-                                this.transformedRequiredFormFieldsFilled,
-                            )
-                            this.$emit('required-fields-filled', allRequiredFieldsFilled)
-                        }
-                        htmlElement.addEventListener('input', eventListener)
-                        this.formEventListeners.push({ element: htmlElement, listener: eventListener })
-                    }
-                })
+            if (formFieldsToListen.length > 0) {
+                this.updateAllFormFields(formFieldsToListen)
+                this.addFormEventListeners(formFieldsToListen)
 
                 const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
                     this.transformedRequiredFormFieldsFilled,
@@ -173,10 +158,10 @@ export default {
                 this.$emit('required-fields-filled', allRequiredFieldsFilled)
             }
         },
-        async updateField(fieldId, fieldName, fieldType, htmlElement) {
+        async updateField(formField, htmlElement) {
             let fieldValue
 
-            switch (fieldType) {
+            switch (htmlElement.type) {
                 case 'radio':
                 case 'checkbox':
                     fieldValue = htmlElement.checked
@@ -186,7 +171,52 @@ export default {
                     break
             }
 
-            this.$set(this.requiredFormFieldsFilled, fieldId, { fieldName, fieldValue })
+            this.$set(this.requiredFormFieldsFilled, formField.id, { fieldName: formField.fieldName, fieldValue })
+        },
+        async updateAllFormFields(formFieldsToListen) {
+            formFieldsToListen.forEach((formField) => {
+                const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
+
+                if (htmlElement && !formField.pushButton) {
+                    this.updateField(formField, htmlElement)
+                }
+            })
+        },
+        async addFormEventListeners(formFieldsToListen) {
+            this.removeFormEventListeners()
+
+            formFieldsToListen.forEach((formField) => {
+                const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
+
+                if (htmlElement) {
+                    const eventListener = async (event) => {
+                        if (formField.pushButton) {
+                            this.updateAllFormFields(formFieldsToListen)
+                        } else {
+                            this.updateField(formField, event.target)
+                        }
+                        const allRequiredFieldsFilled = await this.pdfJsHelper.allRequiredFieldsFilled(
+                            this.transformedRequiredFormFieldsFilled,
+                        )
+                        this.$emit('required-fields-filled', allRequiredFieldsFilled)
+                    }
+
+                    switch (htmlElement.tagName.toLowerCase()) {
+                        case 'select':
+                            htmlElement.addEventListener('change', eventListener)
+                            break
+                        default:
+                            if (formField.pushButton) {
+                                htmlElement.addEventListener('click', eventListener)
+                            } else {
+                                htmlElement.addEventListener('input', eventListener)
+                            }
+                            break
+                    }
+
+                    this.formEventListeners.push({ element: htmlElement, listener: eventListener })
+                }
+            })
         },
         removeFormEventListeners() {
             this.formEventListeners.forEach(({ element, listener }) => {

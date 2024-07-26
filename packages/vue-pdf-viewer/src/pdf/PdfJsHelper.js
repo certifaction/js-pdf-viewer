@@ -157,25 +157,27 @@ export class PdfJsHelper {
      * @param {PDFDocumentProxy} pdfDocument
      * @returns {Promise<Array<any>>}
      */
-    async getRequiredFormFields(pdfDocument) {
+    async getFormFieldsToListen(pdfDocument) {
         if (!(await this.hasForm(pdfDocument))) {
             return []
         }
 
         const pageCount = pdfDocument.numPages
-        const requiredFormFields = []
+        const fieldsToListen = []
 
         for (let i = 1; i <= pageCount; i++) {
             const page = await pdfDocument.getPage(i)
             const annotations = await page.getAnnotations()
             Object.values(annotations).forEach((annotation) => {
-                if (annotation.required && annotation.subtype === 'Widget') {
-                    requiredFormFields.push(annotation)
+                if (
+                    (annotation.required && annotation.subtype === 'Widget') ||
+                    (annotation.fieldType === 'Btn' && annotation.pushButton)
+                ) {
+                    fieldsToListen.push(annotation)
                 }
             })
         }
-
-        return requiredFormFields
+        return fieldsToListen
     }
 
     /**
