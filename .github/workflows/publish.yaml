@@ -17,43 +17,48 @@ jobs:
         if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/') == true
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+            -   name: Checkout
+                uses: actions/checkout@v4
 
-            - name: Setup NodeJS
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '22'
-                  cache: 'npm'
+            -   name: Extract Node version
+                run: |
+                    NODE_VERSION=$(node -p "require('./package.json').volta.node")
+                    echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
 
-            - name: Extract version
-              run: |
-                  PACKAGE_VERSION=$(node -p "require('./lerna.json').version")
-                  echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+            -   name: Setup NodeJS
+                uses: actions/setup-node@v4
+                with:
+                    node-version: ${{ env.NODE_VERSION }}
+                    cache: 'npm'
 
-            - name: Configure Git user
-              run: |
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git config --global user.name "github-actions[bot]"
+            -   name: Extract package version
+                run: |
+                    PACKAGE_VERSION=$(node -p "require('./lerna.json').version")
+                    echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
-            - name: Create Git tag
-              run: |
-                  git tag -a v${{ env.PACKAGE_VERSION }} -m "Release v${{ env.PACKAGE_VERSION }}"
-                  git push --tags
+            -   name: Configure Git user
+                run: |
+                    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                    git config --global user.name "github-actions[bot]"
 
-            - name: Publish to GitHub Packages
-              run: |
-                  npm config set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
-                  if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} == true ]; then
-                      npx lerna publish from-package --dist-tag next --yes
-                  else
-                      npx lerna publish from-package --dist-tag latest --yes
-                  fi
+            -   name: Create Git tag
+                run: |
+                    git tag -a v${{ env.PACKAGE_VERSION }} -m "Release v${{ env.PACKAGE_VERSION }}"
+                    git push --tags
 
-            - name: Create GitHub release
-              uses: ncipollo/release-action@v1
-              with:
-                  tag: v${{ env.PACKAGE_VERSION }}
-                  prerelease: ${{ contains(env.PACKAGE_VERSION, '-') }}
-                  generateReleaseNotes: true
-                  token: ${{ secrets.GITHUB_TOKEN }}
+            -   name: Publish to GitHub Packages
+                run: |
+                    npm config set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
+                    if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} == true ]; then
+                        npx lerna publish from-package --dist-tag next --yes
+                    else
+                        npx lerna publish from-package --dist-tag latest --yes
+                    fi
+
+            -   name: Create GitHub release
+                uses: ncipollo/release-action@v1
+                with:
+                    tag: v${{ env.PACKAGE_VERSION }}
+                    prerelease: ${{ contains(env.PACKAGE_VERSION, '-') }}
+                    generateReleaseNotes: true
+                    token: ${{ secrets.GITHUB_TOKEN }}
