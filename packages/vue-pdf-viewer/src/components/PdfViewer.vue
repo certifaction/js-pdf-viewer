@@ -41,7 +41,7 @@ const emit = defineEmits<{
 }>()
 
 const state = ref<PdfViewerState>({
-    pagesCount: 1,
+    pagesCount: 0,
     currentPage: 1,
     showPageFitButton: false,
 })
@@ -170,6 +170,7 @@ onUnmounted(() => {
 @use 'pdfjs-dist/web/pdf_viewer';
 
 .pdf-viewer {
+    --page-border: 0.5rem solid transparent;
     --pdfviewer-color-controls-font: var(--c-color-grey-600);
     --pdfviewer-color-controls-background: var(--c-color-grey-200);
     position: relative;
