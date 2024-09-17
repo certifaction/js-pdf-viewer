@@ -38,9 +38,6 @@
  */
 
 export class PdfJsHelper {
-    /** @type {PdfJsHelper} */
-    static #instance
-
     /** @type {Promise<boolean>} */
     #initialized
     /** @type {boolean} */
@@ -52,10 +49,6 @@ export class PdfJsHelper {
      * @param {string} pdfjsCMapUrl
      */
     constructor(pdfjsCMapUrl) {
-        if (PdfJsHelper.#instance) {
-            throw new Error('PDFJSHelper is a singleton class. Use PDFJSHelper.getInstance() instead.')
-        }
-
         if (typeof Promise.withResolvers !== 'function') {
             this.#useLegacyPdfJsBuild = true
         }
@@ -103,7 +96,7 @@ export class PdfJsHelper {
         }
 
         if (source instanceof Uint8Array) {
-            docOptions.data = new Uint8Array(source)
+            docOptions.data = source
         } else {
             docOptions.url = source
         }
@@ -222,17 +215,5 @@ export class PdfJsHelper {
             viewer,
             eventBus,
         })
-    }
-
-    /**
-     * @param {string} pdfjsCMapUrl
-     * @returns {PdfJsHelper}
-     */
-    static getInstance(pdfjsCMapUrl) {
-        if (!this.#instance) {
-            this.#instance = new PdfJsHelper(pdfjsCMapUrl)
-        }
-
-        return this.#instance
     }
 }
