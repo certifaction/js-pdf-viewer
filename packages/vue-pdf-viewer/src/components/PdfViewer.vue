@@ -12,7 +12,7 @@
                 {{ _$t('pdfViewer.page') }}
                 <span class="current">{{ currentPage }}</span>
                 {{ _$t('pdfViewer.pageOf') }}
-                <span class="total">{{ pageCount }}</span>
+                <span class="total">{{ pagesCount }}</span>
             </div>
             <div class="actions">
                 <div class="scale">
@@ -37,9 +37,6 @@ import i18nWrapperMixin from '../mixins/i18n-wrapper'
 import { PdfJsHelper } from '../pdf/PdfJsHelper.js'
 import MDIcon from './MDIcon.vue'
 
-const MIN_SCALE = 0.1
-const MAX_SCALE = 10
-
 export default {
     name: 'PdfViewer',
     mixins: [i18nWrapperMixin],
@@ -47,18 +44,8 @@ export default {
         MDIcon,
     },
     props: {
-        pdfjsCMapUrl: {
-            type: String,
-            required: true,
-        },
         source: {
             required: true,
-        },
-        pdfjsViewerOptions: {
-            type: Object,
-            default: function () {
-                return {}
-            },
         },
         defaultScale: {
             required: false,
@@ -70,6 +57,19 @@ export default {
                 }
             },
             default: 'auto',
+        },
+        parentPdfJsHelper: {
+            type: PdfJsHelper,
+        },
+        pdfjsViewerOptions: {
+            type: Object,
+            default: function () {
+                return {}
+            },
+        },
+        pdfjsCMapUrl: {
+            type: String,
+            required: true,
         },
     },
     data() {
@@ -83,64 +83,50 @@ export default {
             pdfViewer: null,
             /** @type {PDFDocumentProxy} */
             pdfDocument: null,
-            currentScale: null,
+            pagesCount: 0,
+            currentPage: 1,
+            showPageFitButton: false,
             requiredFormFieldsFilled: {},
             formEventListeners: [],
         }
     },
     computed: {
-        currentPage() {
-            return this.pdfViewer ? this.pdfViewer.currentPageNumber : 0
-        },
-        pageCount() {
-            return this.pdfDocument ? this.pdfDocument.numPages : 0
-        },
-        showPageFitButton() {
-            return this.currentScale !== 'page-fit'
-        },
         transformedRequiredFormFieldsFilled() {
             return Object.values(this.requiredFormFieldsFilled)
         },
     },
-    watch: {
-        currentScale(newVal, oldVal) {
-            if (oldVal) {
-                this.pdfViewer.currentScaleValue = this.currentScale
-                const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
-                window.dispatchEvent(event)
-            }
-        },
-    },
     methods: {
         pageFit() {
-            this.pdfViewer.currentScaleValue = this.currentScale = 'page-fit'
+            this.pdfViewer.currentScaleValue = 'page-fit'
         },
         decreaseScale() {
-            let newScale = this.pdfViewer.currentScale
-            newScale -= 0.1
-            newScale = newScale.toFixed(2)
-            newScale = Math.floor(newScale * 10) / 10
-
-            this.currentScale = newScale < MIN_SCALE ? MIN_SCALE : newScale
+            this.pdfViewer.decreaseScale()
         },
         increaseScale() {
-            let newScale = this.pdfViewer.currentScale
-            newScale += 0.1
-            newScale = newScale.toFixed(2)
-            newScale = Math.ceil(newScale * 10) / 10
-
-            this.currentScale = newScale > MAX_SCALE ? MAX_SCALE : newScale
+            this.pdfViewer.increaseScale()
         },
-        onPagesLoaded() {
-            this.pdfViewer.currentScaleValue = this.currentScale = this.defaultScale
-
-            const event = new Event('PDFViewer:pagesLoaded')
-            window.dispatchEvent(event)
+        handlePagesLoaded(pagesLoadedEvent) {
+            this.pdfViewer.currentScaleValue = this.defaultScale
+            this.pagesCount = pagesLoadedEvent.pagesCount
 
             const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
             this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
+
+            if (pagesLoadedEvent.source._pages) {
+                const event = new CustomEvent('PDFViewer:pagesLoaded', pagesLoadedEvent.source._pages)
+                window.dispatchEvent(event)
+            }
         },
-        async onAnnotationLayerRendered() {
+        handlePageChanging(pageChangingEvent) {
+            this.currentPage = pageChangingEvent.pageNumber
+        },
+        handleScaleChanging(scaleChangingEvent) {
+            this.showPageFitButton = scaleChangingEvent.presetValue !== 'page-fit'
+
+            const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
+            window.dispatchEvent(event)
+        },
+        async handleAnnotationLayerRendered() {
             if ((await this.pdfJsHelper.hasForm(this.pdfDocument)) && this.pdfjsViewerOptions.annotationMode === 2) {
                 await this.prepareRequiredFormFields()
             }
@@ -226,7 +212,11 @@ export default {
         },
     },
     created() {
-        this.pdfJsHelper = PdfJsHelper.getInstance(this.pdfjsCMapUrl)
+        if (this.parentPdfJsHelper) {
+            this.pdfJsHelper = this.parentPdfJsHelper
+        } else {
+            this.pdfJsHelper = new PdfJsHelper(this.pdfjsCMapUrl)
+        }
     },
     async mounted() {
         try {
@@ -242,12 +232,14 @@ export default {
                 this.pdfDocument = this.source
             }
 
-            this.pdfViewer.eventBus.on('pagesloaded', this.onPagesLoaded)
-            this.pdfViewer.eventBus.on('annotationlayerrendered', this.onAnnotationLayerRendered)
+            this.pdfViewer.eventBus.on('pagesloaded', this.handlePagesLoaded)
+            this.pdfViewer.eventBus.on('pagechanging', this.handlePageChanging)
+            this.pdfViewer.eventBus.on('scalechanging', this.handleScaleChanging)
+            this.pdfViewer.eventBus.on('annotationlayerrendered', this.handleAnnotationLayerRendered)
 
             this.pdfViewer.setDocument(this.pdfDocument)
 
-            const event = new Event('PDFViewer:documentLoaded')
+            const event = new CustomEvent('PDFViewer:documentLoaded')
             window.dispatchEvent(event)
         } catch (error) {
             this.$emit('error', error)
@@ -257,8 +249,10 @@ export default {
     beforeDestroy() {
         this.removeFormEventListeners()
         if (this.pdfViewer) {
-            this.pdfViewer.eventBus.off('pagesloaded', this.onPagesLoaded)
-            this.pdfViewer.eventBus.off('annotationlayerrendered', this.onAnnotationLayerRendered)
+            this.pdfViewer.eventBus.off('pagesloaded', this.handlePagesLoaded)
+            this.pdfViewer.eventBus.off('pagechanging', this.handlePageChanging)
+            this.pdfViewer.eventBus.off('scalechanging', this.handleScaleChanging)
+            this.pdfViewer.eventBus.off('annotationlayerrendered', this.handleAnnotationLayerRendered)
             this.pdfViewer.cleanup()
         }
     },
