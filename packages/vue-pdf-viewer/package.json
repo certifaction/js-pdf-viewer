@@ -19,7 +19,7 @@
         "/src"
     ],
     "scripts": {
-        "lint": "eslint --fix --ext .js,.vue ."
+        "lint": "eslint ."
     },
     "dependencies": {
         "pdfjs-dist": "^4.8.69"
