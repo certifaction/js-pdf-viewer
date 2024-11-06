@@ -17,13 +17,13 @@
             <div class="actions">
                 <div class="scale">
                     <div v-if="showPageFitButton" class="action-button" @click="pageFit">
-                        <MDIcon :icon="mdiCropFree" />
+                        <CIcon :icon="iconExpand" />
                     </div>
                     <div class="action-button" @click="decreaseScale">
-                        <MDIcon :icon="mdiMinus" />
+                        <CIcon :icon="iconMinus" />
                     </div>
                     <div class="action-button" @click="increaseScale">
-                        <MDIcon :icon="mdiPlus" />
+                        <CIcon :icon="iconPlus" />
                     </div>
                 </div>
             </div>
@@ -32,16 +32,16 @@
 </template>
 
 <script>
-import { mdiCropFree, mdiMinus, mdiPlus } from '@mdi/js'
 import i18nWrapperMixin from '../mixins/i18n-wrapper'
 import { PdfJsHelper } from '../pdf/PdfJsHelper.js'
-import MDIcon from './MDIcon.vue'
+import CIcon from './CIcon.vue'
+import { iconExpand, iconMinus, iconPlus } from '../icons'
 
 export default {
     name: 'PdfViewer',
     mixins: [i18nWrapperMixin],
     components: {
-        MDIcon,
+        CIcon,
     },
     props: {
         source: {
@@ -74,9 +74,9 @@ export default {
     },
     data() {
         return {
-            mdiMinus,
-            mdiPlus,
-            mdiCropFree,
+            iconPlus,
+            iconMinus,
+            iconExpand,
             /** @type {PdfJsHelper} */
             pdfJsHelper: null,
             /** @type {PDFViewer} */

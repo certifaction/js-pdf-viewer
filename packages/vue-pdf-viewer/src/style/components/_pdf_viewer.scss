@@ -40,16 +40,16 @@
         pointer-events: none;
         position: absolute;
         z-index: 100;
-        top: 16px;
-        padding: 0 24px;
+        top: 1rem;
+        padding: 0 1.5rem;
         width: 100%;
 
         .pages {
-            padding: 8px;
+            padding: 0.5rem;
             background: var(--pdfviewer-color-controls-background);
             color: var(--pdfviewer-color-controls-font);
-            border-radius: 8px;
-            font-size: 12px;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
             font-weight: 600;
             line-height: 1.5;
         }
@@ -61,29 +61,30 @@
                 pointer-events: auto;
                 position: relative;
                 cursor: pointer;
-                padding: 8px;
+                padding: 0.5rem;
                 background: var(--pdfviewer-color-controls-background);
                 border-radius: 50%;
-                width: 40px;
-                height: 40px;
+                width: 2.5rem;
+                height: 2.5rem;
                 color: var(--pdfviewer-color-controls-font);
 
-                .md-icon {
+                .c-icon {
                     position: absolute;
                     top: 0;
                     bottom: 0;
                     left: 0;
                     right: 0;
                     margin: auto;
-                    width: 20px;
-                    height: 20px;
+                    width: 1.25rem;
+                    height: auto;
+                    fill: currentColor;
                 }
             }
 
             .scale {
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 0.5rem;
             }
         }
     }
