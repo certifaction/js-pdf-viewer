@@ -113,6 +113,7 @@ export default {
             this.$refs.viewerControls.style.width = `calc(100% - ${scrollbarWidth}px)`
 
             if (pagesLoadedEvent.source._pages) {
+                this.$emit('pages-loaded', pagesLoadedEvent.source._pages)
                 const event = new CustomEvent('PDFViewer:pagesLoaded', pagesLoadedEvent.source._pages)
                 window.dispatchEvent(event)
             }
@@ -123,6 +124,7 @@ export default {
         handleScaleChanging(scaleChangingEvent) {
             this.showPageFitButton = scaleChangingEvent.presetValue !== 'page-fit'
 
+            this.$emit('scale-changed', { detail: this.pdfViewer.currentScale })
             const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
             window.dispatchEvent(event)
         },
@@ -239,6 +241,7 @@ export default {
 
             this.pdfViewer.setDocument(this.pdfDocument)
 
+            this.$emit('document-loaded')
             const event = new CustomEvent('PDFViewer:documentLoaded')
             window.dispatchEvent(event)
         } catch (error) {

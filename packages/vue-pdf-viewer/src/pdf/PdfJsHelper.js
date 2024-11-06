@@ -96,7 +96,8 @@ export class PdfJsHelper {
         }
 
         if (source instanceof Uint8Array) {
-            docOptions.data = source
+            // Create a clone because the buffer gets transferred
+            docOptions.data = globalThis.structuredClone(source)
         } else {
             docOptions.url = source
         }
