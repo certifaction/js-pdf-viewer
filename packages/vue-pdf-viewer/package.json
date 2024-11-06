@@ -12,24 +12,20 @@
         "/src"
     ],
     "scripts": {
-        "eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
-        "stylelint": "stylelint \"**/*.{scss,vue}\"",
-        "lint": "run-p eslint stylelint",
         "type-check": "vue-tsc --build --force"
     },
     "dependencies": {
-        "pdfjs-dist": "^4.6.82"
+        "pdfjs-dist": "^4.8.69"
     },
     "peerDependencies": {
         "vue": "^3.5"
     },
     "devDependencies": {
         "@types/jsdom": "^21.1.7",
-        "@vitejs/plugin-vue": "^5.1.3",
-        "jsdom": "^25.0.0",
-        "npm-run-all2": "^6.2.2",
-        "vite": "^5.4.3",
-        "vue": "^3.5.0",
-        "vue-tsc": "^2.1.4"
+        "@vitejs/plugin-vue": "^5.1.4",
+        "jsdom": "^25.0.1",
+        "vite": "^5.4.10",
+        "vue": "^3.5.12",
+        "vue-tsc": "^2.1.10"
     }
 }
