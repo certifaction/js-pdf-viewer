@@ -2,25 +2,16 @@
     "name": "@certifaction/vue-pdf-viewer",
     "version": "1.13.0",
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
-    "homepage": "https://certifaction.com",
-    "license": "MIT",
-    "private": false,
-    "publishConfig": {
-        "access": "public"
-    },
+    "type": "module",
     "repository": {
         "type": "git",
         "url": "https://github.com/certifaction/js-pdf-viewer.git",
         "directory": "packages/vue-pdf-viewer"
     },
-    "type": "module",
     "main": "src/index.js",
     "files": [
         "/src"
     ],
-    "scripts": {
-        "lint": "eslint ."
-    },
     "dependencies": {
         "pdfjs-dist": "^4.8.69"
     },
@@ -29,9 +20,6 @@
         "vue-i18n": "^8.28"
     },
     "devDependencies": {
-        "@vue/eslint-config-prettier": "^10.1.0",
-        "eslint": "^9.14.0",
-        "eslint-plugin-vue": "^9.30.0",
         "vue": "^2.7.16"
     }
 }
