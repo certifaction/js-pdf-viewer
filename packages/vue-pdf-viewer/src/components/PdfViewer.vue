@@ -15,6 +15,7 @@ export interface PdfViewerProps {
     source: string | Uint8Array | PDFDocumentProxy | undefined
     translate: (key: string) => string
     defaultScale?: Scale | number
+    parentPdfJsHelper?: PdfJsHelper
     pdfjsViewerOptions?: Omit<PDFViewerOptions, 'container' | 'eventBus'>
     pdfjsCMapUrl: string
 }
@@ -32,6 +33,7 @@ import CIcon from './CIcon.vue'
 
 const props = withDefaults(defineProps<PdfViewerProps>(), {
     defaultScale: Scale.Auto,
+    parentPdfJsHelper: undefined,
     pdfjsViewerOptions: () => ({}),
 })
 const emit = defineEmits<{
@@ -51,7 +53,7 @@ const viewerContainer = ref<HTMLDivElement | null>(null)
 const viewer = ref<HTMLDivElement | null>(null)
 const viewerControls = ref<HTMLDivElement | null>(null)
 
-const pdfJsHelper = PdfJsHelper.getInstance(props.pdfjsCMapUrl)
+const pdfJsHelper = props.parentPdfJsHelper ?? new PdfJsHelper(props.pdfjsCMapUrl)
 let pdfViewer: PDFViewer
 
 const pageFit = (): void => {
