@@ -30,17 +30,11 @@ export interface ScaleChangeEvent {
 }
 
 export class PdfJsHelper {
-    static #instance: PdfJsHelper
-
     readonly #initialized: Promise<boolean>
     readonly #useLegacyPdfJsBuild: boolean = false
     readonly #pdfjsCMapUrl: string
 
     constructor(pdfjsCMapUrl: string) {
-        if (PdfJsHelper.#instance) {
-            throw new Error('PDFJSHelper is a singleton class. Use PDFJSHelper.getInstance() instead.')
-        }
-
         if (typeof Promise.withResolvers !== 'function') {
             this.#useLegacyPdfJsBuild = true
         }
@@ -80,7 +74,8 @@ export class PdfJsHelper {
         }
 
         if (source instanceof Uint8Array) {
-            docOptions.data = new Uint8Array(source)
+            // Create a clone because the buffer gets transferred
+            docOptions.data = globalThis.structuredClone(source)
         } else {
             docOptions.url = source
         }
@@ -141,13 +136,5 @@ export class PdfJsHelper {
             viewer,
             eventBus,
         })
-    }
-
-    static getInstance(pdfjsCMapUrl: string): PdfJsHelper {
-        if (!this.#instance) {
-            this.#instance = new PdfJsHelper(pdfjsCMapUrl)
-        }
-
-        return this.#instance
     }
 }

@@ -1,4 +1,0 @@
-{
-    "extends": "@certifaction/ts-config/tsconfig.node.json",
-    "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"]
-}
