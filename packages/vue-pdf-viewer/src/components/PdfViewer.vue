@@ -1,7 +1,8 @@
 <script lang="ts">
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
-import { type PDFDocumentProxy } from 'pdfjs-dist'
-import { type PDFViewer, type PDFPageView, type PDFViewerOptions } from 'pdfjs-dist/web/pdf_viewer.mjs'
+import { type PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
+import { type PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
+import { type PDFPageView, type PDFViewer } from 'pdfjs-dist/types/web/pdf_viewer.component'
 import {
     type PageChangeEvent,
     type PagesLoadedEvent,

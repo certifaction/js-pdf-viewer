@@ -13,16 +13,19 @@
         "packages/*"
     ],
     "scripts": {
-        "lint": "lerna run lint",
+        "eslint": "eslint .",
+        "stylelint": "stylelint \"**/*.{scss,vue}\"",
+        "lint": "run-p eslint stylelint",
         "type-check": "lerna run type-check",
         "create-version": "lerna version --no-git-tag-version --no-push && npm install",
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && npm install"
     },
     "devDependencies": {
-        "@certifaction/vue3-webapp-config": "^7.0.2",
-        "lerna": "^8.1.8"
+        "@certifaction/vue3-webapp-config": "^8.0.2",
+        "lerna": "^8.1.9",
+        "npm-run-all2": "^7.0.1"
     },
     "volta": {
-        "node": "22.8.0"
+        "node": "23.1.0"
     }
 }
