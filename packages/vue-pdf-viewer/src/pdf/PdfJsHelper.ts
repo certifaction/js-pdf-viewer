@@ -31,12 +31,11 @@ export interface ScaleChangeEvent {
 
 export class PdfJsHelper {
     readonly #initialized: Promise<boolean>
-    readonly #useLegacyPdfJsBuild: boolean = false
     readonly #pdfjsCMapUrl: string
 
     constructor(pdfjsCMapUrl: string) {
-        if (typeof Promise.withResolvers !== 'function') {
-            this.#useLegacyPdfJsBuild = true
+        if (globalThis.useLegacyPdfJsBuild === undefined) {
+            globalThis.useLegacyPdfJsBuild = typeof Promise.withResolvers !== 'function'
         }
         this.#pdfjsCMapUrl = pdfjsCMapUrl
 
@@ -44,7 +43,7 @@ export class PdfJsHelper {
     }
 
     async #init(): Promise<boolean> {
-        if (this.#useLegacyPdfJsBuild) {
+        if (globalThis.useLegacyPdfJsBuild) {
             const { GlobalWorkerOptions } = await import('pdfjs-dist/legacy/build/pdf.mjs')
             GlobalWorkerOptions.workerPort = new Worker(
                 new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url),
@@ -64,7 +63,7 @@ export class PdfJsHelper {
     async loadDocument(source: string | Uint8Array): Promise<PDFDocumentProxy> {
         await this.#initialized
 
-        const { getDocument } = this.#useLegacyPdfJsBuild
+        const { getDocument } = globalThis.useLegacyPdfJsBuild
             ? await import('pdfjs-dist/legacy/build/pdf.mjs')
             : await import('pdfjs-dist')
 
@@ -124,7 +123,7 @@ export class PdfJsHelper {
     ): Promise<PDFViewerType> {
         await this.#initialized
 
-        const { EventBus, PDFViewer } = this.#useLegacyPdfJsBuild
+        const { EventBus, PDFViewer } = globalThis.useLegacyPdfJsBuild
             ? await import('pdfjs-dist/legacy/web/pdf_viewer.mjs')
             : await import('pdfjs-dist/web/pdf_viewer.mjs')
 
