@@ -20,12 +20,12 @@
     "devDependencies": {
         "@certifaction/prettier-config": "^8.0.0",
         "@vue/eslint-config-prettier": "^10.1.0",
-        "eslint": "^9.16.0",
+        "eslint": "^9.17.0",
         "eslint-plugin-vue": "^9.32.0",
         "lerna": "^8.1.9",
-        "prettier": "^3.4.1"
+        "prettier": "^3.4.2"
     },
     "volta": {
-        "node": "23.3.0"
+        "node": "23.6.0"
     }
 }
