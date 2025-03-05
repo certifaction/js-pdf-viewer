@@ -21,7 +21,7 @@
         "@certifaction/prettier-config": "^9.0.0",
         "@vue/eslint-config-prettier": "^10.2.0",
         "eslint": "^9.21.0",
-        "eslint-plugin-vue": "^9.32.0",
+        "eslint-plugin-vue": "^10.0.0",
         "lerna": "^8.2.1",
         "prettier": "^3.5.3"
     },
