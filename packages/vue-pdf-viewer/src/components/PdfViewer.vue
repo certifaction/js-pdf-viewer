@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import { type PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
 import { type PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
 import { type PDFPageView, type PDFViewer } from 'pdfjs-dist/types/web/pdf_viewer.component'
@@ -49,9 +49,9 @@ const state = ref<PdfViewerState>({
     showPageFitButton: false,
 })
 
-const viewerContainer = ref<HTMLDivElement | null>(null)
-const viewer = ref<HTMLDivElement | null>(null)
-const viewerControls = ref<HTMLDivElement | null>(null)
+const viewerContainer = useTemplateRef<HTMLDivElement>('viewerContainer')
+const viewer = useTemplateRef<HTMLDivElement>('viewer')
+const viewerControls = useTemplateRef<HTMLDivElement>('viewerControls')
 
 const pdfJsHelper = props.parentPdfJsHelper ?? new PdfJsHelper(props.pdfjsCMapUrl)
 let pdfViewer: PDFViewer
@@ -92,19 +92,23 @@ const handleScaleChanging = (scaleChangingEvent: ScaleChangeEvent) => {
     emit('scaleChange', pdfViewer.currentScale)
 }
 
+const loadDocument = async (source: string | Uint8Array | PDFDocumentProxy) => {
+    if (source instanceof Uint8Array || typeof source === 'string') {
+        const pdfDocument = await pdfJsHelper.loadDocument(source)
+        pdfViewer.setDocument(pdfDocument)
+    } else {
+        pdfViewer.setDocument(source)
+    }
+
+    emit('documentLoaded')
+}
+
 watchEffect(async () => {
     if (!props.source || !pdfViewer) {
         return
     }
 
-    if (props.source instanceof Uint8Array || typeof props.source === 'string') {
-        const pdfDocument = await pdfJsHelper.loadDocument(props.source)
-        pdfViewer.setDocument(pdfDocument)
-    } else {
-        pdfViewer.setDocument(props.source)
-    }
-
-    emit('documentLoaded')
+    await loadDocument(props.source)
 })
 
 onMounted(async () => {
@@ -118,6 +122,10 @@ onMounted(async () => {
         pdfViewer.eventBus.on('pagesloaded', handlePagesLoaded)
         pdfViewer.eventBus.on('pagechanging', handlePageChanging)
         pdfViewer.eventBus.on('scalechanging', handleScaleChanging)
+
+        if (props.source) {
+            await loadDocument(props.source)
+        }
     } catch (error: unknown) {
         console.error('Error while mounting PDFViewer', error)
         emit('error', error)
