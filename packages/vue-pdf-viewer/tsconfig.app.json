@@ -4,6 +4,7 @@
     "exclude": ["test/**/*", "src/**/*.test.ts"],
     "compilerOptions": {
         "baseUrl": "../..",
-        "jsxImportSource": ""
+        "jsxImportSource": "",
+        "types": ["vite/client"]
     }
 }
