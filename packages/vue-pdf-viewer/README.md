@@ -87,13 +87,31 @@ Possible options are the PDFViewerOptions from [https://github.com/mozilla/pdf.j
 
 `container` and `eventBus` are always overridden by the component.
 
+### parentPdfJsHelper
+
+Type: `PdfJsHelper` | Required: `false`
+
+You can optionally pass an existing PdfJsHelper instance. When provided, the `pdfjsCMapUrl`, `pdfjsIccUrl`, and `pdfjsWasmUrl` props are not required.
+
 ### pdfjsCMapUrl
 
-Type: `string` | Required: `true`
+Type: `string` | Required: `true` (unless `parentPdfJsHelper` is provided)
 
 Pass the path where the cmaps can be accessed.
 
-vite.config.ts example to copy the cmaps to the dist folder:
+### pdfjsIccUrl
+
+Type: `string` | Required: `true` (unless `parentPdfJsHelper` is provided)
+
+Pass the path where the ICC color profile files can be accessed.
+
+### pdfjsWasmUrl
+
+Type: `string` | Required: `true` (unless `parentPdfJsHelper` is provided)
+
+Pass the path where the WebAssembly files can be accessed.
+
+vite.config.ts example to copy all required PDF.js files to the dist folder:
 ```ts
 import {viteStaticCopy} from 'vite-plugin-static-copy'
 
@@ -103,7 +121,15 @@ export default defineConfig({
       targets: [
         {
           src: normalizePath(resolve(dirname(fileURLToPath(import.meta.url)), './node_modules/pdfjs-dist/cmaps/*')),
-          dest: 'pdf/cmaps/',
+          dest: 'pdfjs/cmaps/',
+        },
+        {
+          src: normalizePath(resolve(dirname(fileURLToPath(import.meta.url)), './node_modules/pdfjs-dist/iccs/*')),
+          dest: 'pdfjs/iccs/',
+        },
+        {
+          src: normalizePath(resolve(dirname(fileURLToPath(import.meta.url)), './node_modules/pdfjs-dist/wasm/*')),
+          dest: 'pdfjs/wasm/',
         },
       ],
     }),
