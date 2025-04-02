@@ -8,6 +8,8 @@ export enum Scale {
     PageWidth = 'page-width',
 }
 
+export type DocumentOptions = Omit<DocumentInitParameters, 'cMapUrl' | 'iccUrl' | 'wasmUrl' | 'url' | 'data'>
+
 // Manual type definition for EventBus "pagesloaded"
 export interface PagesLoadedEvent {
     source: PDFViewerType
@@ -31,13 +33,22 @@ export interface ScaleChangeEvent {
 
 export class PdfJsHelper {
     readonly #initialized: Promise<boolean>
-    readonly #pdfjsCMapUrl: string
+    readonly #cMapUrl: string
+    readonly #iccUrl: string
+    readonly #wasmUrl: string
 
-    constructor(pdfjsCMapUrl: string) {
+    /**
+     * @param cMapUrl The URL where the predefined Adobe CMaps are located. Include the trailing slash.
+     * @param iccUrl The URL where the predefined ICC profiles are located. Include the trailing slash.
+     * @param wasmUrl The URL where the wasm files are located. Include the trailing slash.
+     */
+    constructor(cMapUrl: string, iccUrl: string, wasmUrl: string) {
         if (globalThis.useLegacyPdfJsBuild === undefined) {
             globalThis.useLegacyPdfJsBuild = typeof Promise.withResolvers !== 'function'
         }
-        this.#pdfjsCMapUrl = pdfjsCMapUrl
+        this.#cMapUrl = cMapUrl
+        this.#iccUrl = iccUrl
+        this.#wasmUrl = wasmUrl
 
         this.#initialized = this.#init()
     }
@@ -60,7 +71,7 @@ export class PdfJsHelper {
         return true
     }
 
-    async loadDocument(source: string | Uint8Array): Promise<PDFDocumentProxy> {
+    async loadDocument(source: string | Uint8Array, options?: DocumentOptions): Promise<PDFDocumentProxy> {
         await this.#initialized
 
         const { getDocument } = globalThis.useLegacyPdfJsBuild
@@ -68,8 +79,10 @@ export class PdfJsHelper {
             : await import('pdfjs-dist')
 
         const docOptions: DocumentInitParameters = {
-            cMapUrl: this.#pdfjsCMapUrl,
-            cMapPacked: true,
+            ...options,
+            cMapUrl: this.#cMapUrl,
+            iccUrl: this.#iccUrl,
+            wasmUrl: this.#wasmUrl,
         }
 
         if (source instanceof Uint8Array) {

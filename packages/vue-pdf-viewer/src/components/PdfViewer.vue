@@ -11,14 +11,28 @@ import {
     type ScaleChangeEvent,
 } from '../pdf/PdfJsHelper'
 
-export interface PdfViewerProps {
+interface PdfViewerPropsBase {
     source: string | Uint8Array | PDFDocumentProxy | undefined
     translate: (key: string) => string
     defaultScale?: Scale | number
-    parentPdfJsHelper?: PdfJsHelper
     pdfjsViewerOptions?: Omit<PDFViewerOptions, 'container' | 'eventBus'>
-    pdfjsCMapUrl: string
 }
+
+interface PdfViewerPropsWithHelper extends PdfViewerPropsBase {
+    parentPdfJsHelper: PdfJsHelper
+    pdfjsCMapUrl?: never
+    pdfjsIccUrl?: never
+    pdfjsWasmUrl?: never
+}
+
+interface PdfViewerPropsWithoutHelper extends PdfViewerPropsBase {
+    parentPdfJsHelper: undefined
+    pdfjsCMapUrl: string
+    pdfjsIccUrl: string
+    pdfjsWasmUrl: string
+}
+
+export type PdfViewerProps = PdfViewerPropsWithHelper | PdfViewerPropsWithoutHelper
 
 interface PdfViewerState {
     pagesCount: number
@@ -33,9 +47,9 @@ import CIcon from './CIcon.vue'
 
 const props = withDefaults(defineProps<PdfViewerProps>(), {
     defaultScale: Scale.Auto,
-    parentPdfJsHelper: undefined,
     pdfjsViewerOptions: () => ({}),
 })
+
 const emit = defineEmits<{
     documentLoaded: []
     pagesLoaded: [pages: PDFPageView[]]
@@ -53,7 +67,8 @@ const viewerContainer = useTemplateRef<HTMLDivElement>('viewerContainer')
 const viewer = useTemplateRef<HTMLDivElement>('viewer')
 const viewerControls = useTemplateRef<HTMLDivElement>('viewerControls')
 
-const pdfJsHelper = props.parentPdfJsHelper ?? new PdfJsHelper(props.pdfjsCMapUrl)
+const pdfJsHelper =
+    props.parentPdfJsHelper ?? new PdfJsHelper(props.pdfjsCMapUrl, props.pdfjsIccUrl, props.pdfjsWasmUrl)
 let pdfViewer: PDFViewer
 
 const pageFit = (): void => {
