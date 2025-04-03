@@ -18,21 +18,21 @@ interface PdfViewerPropsBase {
     pdfjsViewerOptions?: Omit<PDFViewerOptions, 'container' | 'eventBus'>
 }
 
-interface PdfViewerPropsWithHelper extends PdfViewerPropsBase {
+interface PdfViewerPropsWithHelper {
     parentPdfJsHelper: PdfJsHelper
     pdfjsCMapUrl?: never
     pdfjsIccUrl?: never
     pdfjsWasmUrl?: never
 }
 
-interface PdfViewerPropsWithoutHelper extends PdfViewerPropsBase {
-    parentPdfJsHelper: undefined
+interface PdfViewerPropsWithoutHelper {
+    parentPdfJsHelper?: never
     pdfjsCMapUrl: string
     pdfjsIccUrl: string
     pdfjsWasmUrl: string
 }
 
-export type PdfViewerProps = PdfViewerPropsWithHelper | PdfViewerPropsWithoutHelper
+export type PdfViewerProps = PdfViewerPropsBase & (PdfViewerPropsWithHelper | PdfViewerPropsWithoutHelper)
 
 interface PdfViewerState {
     pagesCount: number
@@ -41,7 +41,7 @@ interface PdfViewerState {
 }
 </script>
 
-<script lang="ts" setup>
+<script lang="ts" generic="T" setup>
 import { iconPlus, iconFit, iconMinus } from '../icons'
 import CIcon from './CIcon.vue'
 
