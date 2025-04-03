@@ -41,16 +41,24 @@ export class PdfJsHelper {
     /** @type {Promise<boolean>} */
     #initialized
     /** @type {string} */
-    #pdfjsCMapUrl
+    #cMapUrl
+    /** @type {string} */
+    #iccUrl
+    /** @type {string} */
+    #wasmUrl
 
     /**
-     * @param {string} pdfjsCMapUrl
+     * @param {string} cMapUrl
+     * @param {string} iccUrl
+     * @param {string} wasmUrl
      */
-    constructor(pdfjsCMapUrl) {
+    constructor(cMapUrl, iccUrl, wasmUrl) {
         if (globalThis.useLegacyPdfJsBuild === undefined) {
             globalThis.useLegacyPdfJsBuild = typeof Promise.withResolvers !== 'function'
         }
-        this.#pdfjsCMapUrl = pdfjsCMapUrl
+        this.#cMapUrl = cMapUrl
+        this.#iccUrl = iccUrl
+        this.#wasmUrl = wasmUrl
 
         this.#initialized = this.#init()
     }
@@ -89,8 +97,9 @@ export class PdfJsHelper {
 
         /** @type {DocumentInitParameters} */
         const docOptions = {
-            cMapUrl: this.#pdfjsCMapUrl,
-            cMapPacked: true,
+            cMapUrl: this.#cMapUrl,
+            iccUrl: this.#iccUrl,
+            wasmUrl: this.#wasmUrl,
         }
 
         if (source instanceof Uint8Array) {

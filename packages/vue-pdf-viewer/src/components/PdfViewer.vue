@@ -58,16 +58,24 @@ export default {
             },
             default: 'auto',
         },
-        parentPdfJsHelper: {
-            type: PdfJsHelper,
-        },
         pdfjsViewerOptions: {
             type: Object,
             default: function () {
                 return {}
             },
         },
+        parentPdfJsHelper: {
+            type: PdfJsHelper,
+        },
         pdfjsCMapUrl: {
+            type: String,
+            required: true,
+        },
+        pdfjsIccUrl: {
+            type: String,
+            required: true,
+        },
+        pdfjsWasmUrl: {
             type: String,
             required: true,
         },
@@ -217,7 +225,7 @@ export default {
         if (this.parentPdfJsHelper) {
             this.pdfJsHelper = this.parentPdfJsHelper
         } else {
-            this.pdfJsHelper = new PdfJsHelper(this.pdfjsCMapUrl)
+            this.pdfJsHelper = new PdfJsHelper(this.pdfjsCMapUrl, this.pdfjsIccUrl, this.pdfjsWasmUrl)
         }
     },
     async mounted() {
