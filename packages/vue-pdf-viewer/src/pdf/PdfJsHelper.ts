@@ -44,7 +44,8 @@ export class PdfJsHelper {
      */
     constructor(cMapUrl: string, iccUrl: string, wasmUrl: string) {
         if (globalThis.useLegacyPdfJsBuild === undefined) {
-            globalThis.useLegacyPdfJsBuild = typeof Promise.withResolvers !== 'function'
+            globalThis.useLegacyPdfJsBuild =
+                typeof Promise.withResolvers !== 'function' || typeof URL.parse !== 'function'
         }
         this.#cMapUrl = cMapUrl
         this.#iccUrl = iccUrl
