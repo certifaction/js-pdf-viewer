@@ -150,9 +150,9 @@ export class PdfJsHelper {
             return false
         }
 
-        const currentFormValues = pdfDocument.annotationStorage.getAll()
+        const currentFormValues = [...pdfDocument.annotationStorage]
 
-        return currentFormValues !== null
+        return currentFormValues.length !== 0
     }
 
     /**
