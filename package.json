@@ -21,8 +21,8 @@
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && npm install"
     },
     "devDependencies": {
-        "@certifaction/vue3-webapp-config": "^9.1.0",
-        "lerna": "^8.2.1",
+        "@certifaction/vue3-webapp-config": "^9.2.0",
+        "lerna": "^8.2.2",
         "npm-run-all2": "^7.0.2"
     },
     "volta": {
