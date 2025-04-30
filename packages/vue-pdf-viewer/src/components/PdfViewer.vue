@@ -193,7 +193,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss">
-@use 'pdfjs-dist/web/pdf_viewer';
+@import 'pdfjs-dist/web/pdf_viewer.css';
 
 .pdf-viewer {
     --page-border: 0.5rem solid transparent;
