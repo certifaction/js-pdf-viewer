@@ -1,6 +1,6 @@
 {
     "name": "@certifaction/vue-pdf-viewer",
-    "version": "1.18.0",
+    "version": "1.19.0",
     "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
     "type": "module",
     "repository": {
