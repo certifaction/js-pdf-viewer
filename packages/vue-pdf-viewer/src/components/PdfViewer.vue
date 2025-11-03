@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 import { type PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
 import { type PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
@@ -10,42 +10,39 @@ import {
     Scale,
     type ScaleChangeEvent,
 } from '../pdf/PdfJsHelper'
+import { iconPlus, iconFit, iconMinus } from '../icons'
+import CIcon from './CIcon.vue'
 
-interface PdfViewerPropsBase {
+interface PropsBase {
     source: string | Uint8Array | PDFDocumentProxy | undefined
     translate: (key: string) => string
     defaultScale?: Scale | number
     pdfjsViewerOptions?: Omit<PDFViewerOptions, 'container' | 'eventBus'>
 }
 
-interface PdfViewerPropsWithHelper {
+interface PropsWithHelper {
     parentPdfJsHelper: PdfJsHelper
     pdfjsCMapUrl?: never
     pdfjsIccUrl?: never
     pdfjsWasmUrl?: never
 }
 
-interface PdfViewerPropsWithoutHelper {
+interface PropsWithoutHelper {
     parentPdfJsHelper?: never
     pdfjsCMapUrl: string
     pdfjsIccUrl: string
     pdfjsWasmUrl: string
 }
 
-export type PdfViewerProps = PdfViewerPropsBase & (PdfViewerPropsWithHelper | PdfViewerPropsWithoutHelper)
+type Props = PropsBase & (PropsWithHelper | PropsWithoutHelper)
 
-interface PdfViewerState {
+interface State {
     pagesCount: number
     currentPage: number
     showPageFitButton: boolean
 }
-</script>
 
-<script lang="ts" generic="T" setup>
-import { iconPlus, iconFit, iconMinus } from '../icons'
-import CIcon from './CIcon.vue'
-
-const props = withDefaults(defineProps<PdfViewerProps>(), {
+const props = withDefaults(defineProps<Props>(), {
     defaultScale: Scale.Auto,
     pdfjsViewerOptions: () => ({}),
 })
@@ -57,7 +54,7 @@ const emit = defineEmits<{
     error: [error: unknown]
 }>()
 
-const state = ref<PdfViewerState>({
+const state = ref<State>({
     pagesCount: 0,
     currentPage: 1,
     showPageFitButton: false,
