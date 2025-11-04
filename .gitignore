@@ -26,4 +26,16 @@ coverage
 
 *.tsbuildinfo
 
+.eslintcache
+
+# Cypress
+/cypress/videos/
+/cypress/screenshots/
+
+# Vitest
+__screenshots__/
+
+test-results/
+playwright-report/
+
 certifaction-vue-pdf-viewer-*.tgz

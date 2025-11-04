@@ -1,20 +1,12 @@
-<script lang="ts">
-export interface Icon {
-    svgPath?: string
-    svgCode?: string
-    width?: number
-    height?: number
-}
-
-export interface CIconProps {
-    icon: Icon
-}
-</script>
-
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { type Icon } from '../icons'
 
-const props = defineProps<CIconProps>()
+interface Props {
+    icon: Icon
+}
+
+const props = defineProps<Props>()
 
 const svgAttributes = computed(() => {
     const width = props.icon.width ?? 24
@@ -31,7 +23,8 @@ const svgAttributes = computed(() => {
 </script>
 
 <template>
-    <svg v-if="props.icon.svgCode" v-bind="svgAttributes" v-html="props.icon.svgCode"></svg>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <svg v-if="props.icon.svgCode" v-bind="svgAttributes" v-html="props.icon.svgCode" />
     <svg v-else-if="props.icon.svgPath" v-bind="svgAttributes">
         <path :d="props.icon.svgPath" />
     </svg>
