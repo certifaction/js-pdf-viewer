@@ -13,21 +13,27 @@
         "packages/*"
     ],
     "scripts": {
-        "lint": "eslint .",
+        "lint:oxlint": "oxlint . -D correctness --ignore-path .gitignore",
+        "lint:eslint": "eslint . --cache",
+        "lint": "run-s lint:*",
         "create-version": "lerna version --no-git-tag-version --no-push && npm install",
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && npm install"
     },
     "devDependencies": {
-        "@certifaction/prettier-config": "^11.0.0",
-        "@eslint/js": "^9.36.0",
+        "@certifaction/prettier-config": "^12.0.0",
+        "@eslint/js": "^9.39.1",
+        "@prettier/plugin-oxc": "^0.0.4",
         "@vue/eslint-config-prettier": "^10.2.0",
-        "eslint": "^9.36.0",
-        "eslint-plugin-vue": "^10.5.0",
-        "globals": "^16.4.0",
+        "eslint": "^9.39.1",
+        "eslint-plugin-oxlint": "^1.25.0",
+        "eslint-plugin-vue": "^10.5.1",
+        "globals": "^16.5.0",
         "lerna": "^9.0.0",
+        "npm-run-all2": "^8.0.4",
+        "oxlint": "^1.25.0",
         "prettier": "^3.6.2"
     },
     "volta": {
-        "node": "24.9.0"
+        "node": "25.1.0"
     }
 }
