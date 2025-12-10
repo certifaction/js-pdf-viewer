@@ -1,8 +1,5 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
-import { type PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
-import { type PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
-import { type PDFPageView, type PDFViewer } from 'pdfjs-dist/types/web/pdf_viewer.component'
 import {
     type PageChangeEvent,
     type PagesLoadedEvent,
@@ -12,6 +9,9 @@ import {
 } from '../pdf/PdfJsHelper'
 import { iconPlus, iconFit, iconMinus } from '../icons'
 import CIcon from './CIcon.vue'
+import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
+import type { PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
+import type { PDFPageView, PDFViewer } from 'pdfjs-dist/types/web/pdf_viewer.component'
 
 interface PropsBase {
     source: string | Uint8Array | PDFDocumentProxy | undefined
