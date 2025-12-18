@@ -66,22 +66,39 @@ const viewerControls = useTemplateRef<HTMLDivElement>('viewerControls')
 
 const pdfJsHelper =
     props.parentPdfJsHelper ?? new PdfJsHelper(props.pdfjsCMapUrl, props.pdfjsIccUrl, props.pdfjsWasmUrl)
-let pdfViewer: PDFViewer
+let pdfViewer: PDFViewer | undefined
+let pdfDocument: PDFDocumentProxy | undefined
 
 const pageFit = (): void => {
-    pdfViewer.currentScaleValue = Scale.PageFit
+    if (pdfViewer) {
+        pdfViewer.currentScaleValue = Scale.PageFit
+    }
 }
 
 const decreaseScale = (): void => {
-    pdfViewer.decreaseScale()
+    pdfViewer?.decreaseScale()
 }
 
 const increaseScale = (): void => {
-    pdfViewer.increaseScale()
+    pdfViewer?.increaseScale()
+}
+
+const handlePagesInit = async () => {
+    if (!pdfViewer) {
+        return
+    }
+
+    pdfViewer.currentScaleValue = props.defaultScale.toString()
+
+    if (pdfDocument && props.pdfjsViewerOptions.annotationMode === 2) {
+        const hasForm = await pdfJsHelper.hasForm(pdfDocument)
+        if (hasForm) {
+            // TODO: Implement prepare required form fields
+        }
+    }
 }
 
 const handlePagesLoaded = (pagesLoadedEvent: PagesLoadedEvent) => {
-    pdfViewer.currentScaleValue = props.defaultScale.toString()
     state.value.pagesCount = pagesLoadedEvent.pagesCount
 
     if (viewerContainer.value && viewerControls.value) {
@@ -101,16 +118,19 @@ const handlePageChanging = (pageChangingEvent: PageChangeEvent) => {
 const handleScaleChanging = (scaleChangingEvent: ScaleChangeEvent) => {
     state.value.showPageFitButton = scaleChangingEvent.presetValue !== Scale.PageFit
 
-    emit('scaleChange', pdfViewer.currentScale)
+    if (pdfViewer) {
+        emit('scaleChange', pdfViewer.currentScale)
+    }
 }
 
 const loadDocument = async (source: string | Uint8Array | PDFDocumentProxy) => {
     if (source instanceof Uint8Array || typeof source === 'string') {
-        const pdfDocument = await pdfJsHelper.loadDocument(source)
-        pdfViewer.setDocument(pdfDocument)
+        pdfDocument = await pdfJsHelper.loadDocument(source)
     } else {
-        pdfViewer.setDocument(source)
+        pdfDocument = source
     }
+
+    pdfViewer?.setDocument(pdfDocument)
 
     emit('documentLoaded')
 }
@@ -131,6 +151,7 @@ onMounted(async () => {
 
         pdfViewer = await pdfJsHelper.createPdfViewer(props.pdfjsViewerOptions, viewerContainer.value, viewer.value)
 
+        pdfViewer.eventBus.on('pagesinit', handlePagesInit)
         pdfViewer.eventBus.on('pagesloaded', handlePagesLoaded)
         pdfViewer.eventBus.on('pagechanging', handlePageChanging)
         pdfViewer.eventBus.on('scalechanging', handleScaleChanging)
@@ -146,6 +167,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
     if (pdfViewer) {
+        pdfViewer.eventBus.off('pagesinit', handlePagesInit)
         pdfViewer.eventBus.off('pagesloaded', handlePagesLoaded)
         pdfViewer.eventBus.off('pagechanging', handlePageChanging)
         pdfViewer.eventBus.off('scalechanging', handleScaleChanging)
