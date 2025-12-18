@@ -113,8 +113,17 @@ export default {
         increaseScale() {
             this.pdfViewer.increaseScale()
         },
-        handlePagesLoaded(pagesLoadedEvent) {
+        async handlePagesInit() {
             this.pdfViewer.currentScaleValue = this.defaultScale
+
+            if (this.pdfjsViewerOptions.annotationMode === 2) {
+                const hasForm = await this.pdfJsHelper.hasForm(this.pdfDocument)
+                if (hasForm) {
+                    await this.prepareRequiredFormFields()
+                }
+            }
+        },
+        handlePagesLoaded(pagesLoadedEvent) {
             this.pagesCount = pagesLoadedEvent.pagesCount
 
             const scrollbarWidth = this.$refs.viewerContainer.offsetWidth - this.$refs.viewerContainer.clientWidth
@@ -135,11 +144,6 @@ export default {
             this.$emit('scale-changed', { detail: this.pdfViewer.currentScale })
             const event = new CustomEvent('PDFViewer:scaleChange', { detail: this.pdfViewer.currentScale })
             window.dispatchEvent(event)
-        },
-        async handleAnnotationLayerRendered() {
-            if ((await this.pdfJsHelper.hasForm(this.pdfDocument)) && this.pdfjsViewerOptions.annotationMode === 2) {
-                await this.prepareRequiredFormFields()
-            }
         },
         async prepareRequiredFormFields() {
             const formFieldsToListen = await this.pdfJsHelper.getFormFieldsToListen(this.pdfDocument)
@@ -169,7 +173,7 @@ export default {
 
             this.$set(this.requiredFormFieldsFilled, formField.id, { fieldName: formField.fieldName, fieldValue })
         },
-        async updateAllFormFields(formFieldsToListen) {
+        updateAllFormFields(formFieldsToListen) {
             formFieldsToListen.forEach((formField) => {
                 const htmlElement = document.querySelector(`[data-element-id="${formField.id}"]`)
 
@@ -178,7 +182,7 @@ export default {
                 }
             })
         },
-        async addFormEventListeners(formFieldsToListen) {
+        addFormEventListeners(formFieldsToListen) {
             this.removeFormEventListeners()
 
             formFieldsToListen.forEach((formField) => {
@@ -242,10 +246,10 @@ export default {
                 this.pdfDocument = this.source
             }
 
+            this.pdfViewer.eventBus.on('pagesinit', this.handlePagesInit)
             this.pdfViewer.eventBus.on('pagesloaded', this.handlePagesLoaded)
             this.pdfViewer.eventBus.on('pagechanging', this.handlePageChanging)
             this.pdfViewer.eventBus.on('scalechanging', this.handleScaleChanging)
-            this.pdfViewer.eventBus.on('annotationlayerrendered', this.handleAnnotationLayerRendered)
 
             this.pdfViewer.setDocument(this.pdfDocument)
 
@@ -259,11 +263,13 @@ export default {
     },
     beforeDestroy() {
         this.removeFormEventListeners()
+
         if (this.pdfViewer) {
+            this.pdfViewer.eventBus.off('pagesinit', this.handlePagesInit)
             this.pdfViewer.eventBus.off('pagesloaded', this.handlePagesLoaded)
             this.pdfViewer.eventBus.off('pagechanging', this.handlePageChanging)
             this.pdfViewer.eventBus.off('scalechanging', this.handleScaleChanging)
-            this.pdfViewer.eventBus.off('annotationlayerrendered', this.handleAnnotationLayerRendered)
+
             this.pdfViewer.cleanup()
         }
     },

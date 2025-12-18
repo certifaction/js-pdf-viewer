@@ -14,6 +14,12 @@
  */
 
 /**
+ * Manual type definition for EventBus "pagesinit"
+ * @typedef {Object} PagesInitEvent
+ * @property {PDFViewer} source
+ */
+
+/**
  * Manual type definition for EventBus "pagesloaded"
  * @typedef {Object} PagesLoadedEvent
  * @property {PDFViewer} source
