@@ -10,6 +10,11 @@ export enum Scale {
 
 export type DocumentOptions = Omit<DocumentInitParameters, 'cMapUrl' | 'iccUrl' | 'wasmUrl' | 'url' | 'data'>
 
+// Manual type definition for EventBus "pagesinit"
+export interface PagesInitEvent {
+    source: PDFViewerType
+}
+
 // Manual type definition for EventBus "pagesloaded"
 export interface PagesLoadedEvent {
     source: PDFViewerType
