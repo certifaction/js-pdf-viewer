@@ -9,27 +9,21 @@
             </div>
             <div class="actions">
                 <div class="scale" role="group" :aria-label="_$t('pdfViewer.zoomControls')">
-                    <div v-if="showPageFitButton" class="action-button"
-                        role="button"
-                        tabindex="0"
+                    <button v-if="showPageFitButton" class="action-button"
                         :aria-label="_$t('pdfViewer.fitToPage')"
                         @click="pageFit">
                         <CIcon :icon="iconExpand" aria-hidden="true" />
-                    </div>
-                    <div class="action-button" 
-                        role="button"
-                        tabindex="0"
+                    </button>
+                    <button class="action-button" 
                         :aria-label="_$t('pdfViewer.zoomOut')"
                         @click="decreaseScale">
                         <CIcon :icon="iconMinus" aria-hidden="true" />
-                    </div>
-                    <div class="action-button"
-                        role="button"
-                        tabindex="0"
+                    </button>
+                    <button class="action-button"
                         :aria-label="_$t('pdfViewer.zoomIn')"
                         @click="increaseScale">
                         <CIcon :icon="iconPlus" aria-hidden="true" />
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
