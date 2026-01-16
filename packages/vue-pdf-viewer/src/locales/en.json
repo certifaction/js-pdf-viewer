@@ -1,6 +1,10 @@
 {
     "pdfViewer": {
         "page": "Page",
-        "pageOf": "of"
+        "pageOf": "of",
+        "zoomControls": "Zoom controls",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "fitToPage": "Fit to page"
     }
 }

@@ -1,5 +1,32 @@
 <template>
-    <div class="pdf-viewer">
+    <div class="pdf-viewer" role="document" tabindex="0">
+        <div class="controls" ref="viewerControls">
+            <div class="pages" role="status" aria-live="polite">
+                {{ _$t('pdfViewer.page') }}
+                <span class="current">{{ currentPage }}</span>
+                {{ _$t('pdfViewer.pageOf') }}
+                <span class="total">{{ pagesCount }}</span>
+            </div>
+            <div class="actions">
+                <div class="scale" role="group" :aria-label="_$t('pdfViewer.zoomControls')">
+                    <button v-if="showPageFitButton" class="action-button"
+                        :aria-label="_$t('pdfViewer.fitToPage')"
+                        @click="pageFit">
+                        <CIcon :icon="iconExpand" aria-hidden="true" />
+                    </button>
+                    <button class="action-button" 
+                        :aria-label="_$t('pdfViewer.zoomOut')"
+                        @click="decreaseScale">
+                        <CIcon :icon="iconMinus" aria-hidden="true" />
+                    </button>
+                    <button class="action-button"
+                        :aria-label="_$t('pdfViewer.zoomIn')"
+                        @click="increaseScale">
+                        <CIcon :icon="iconPlus" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
+        </div>
         <slot name="before-viewer-container" />
         <div class="viewer-container" ref="viewerContainer">
             <slot name="before-viewer" />
@@ -7,27 +34,6 @@
             <slot name="after-viewer" />
         </div>
         <slot name="after-viewer-container" />
-        <div class="controls" ref="viewerControls">
-            <div class="pages">
-                {{ _$t('pdfViewer.page') }}
-                <span class="current">{{ currentPage }}</span>
-                {{ _$t('pdfViewer.pageOf') }}
-                <span class="total">{{ pagesCount }}</span>
-            </div>
-            <div class="actions">
-                <div class="scale">
-                    <div v-if="showPageFitButton" class="action-button" @click="pageFit">
-                        <CIcon :icon="iconExpand" />
-                    </div>
-                    <div class="action-button" @click="decreaseScale">
-                        <CIcon :icon="iconMinus" />
-                    </div>
-                    <div class="action-button" @click="increaseScale">
-                        <CIcon :icon="iconPlus" />
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
