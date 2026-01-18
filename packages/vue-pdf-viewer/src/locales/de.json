@@ -1,6 +1,10 @@
 {
     "pdfViewer": {
         "page": "Seite",
-        "pageOf": "von"
+        "pageOf": "von",
+        "zoomControls": "Zoom-Steuerelemente",
+        "zoomIn": "Vergrößern",
+        "zoomOut": "Verkleinern",
+        "fitToPage": "An Seite anpassen"
     }
 }
