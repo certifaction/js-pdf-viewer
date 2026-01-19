@@ -177,17 +177,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="pdf-viewer">
-        <slot name="before-viewer-container" />
-        <div ref="viewerContainer" class="viewer-container">
-            <slot name="before-viewer" />
-            <div ref="viewer" class="pdfViewer" />
-            <slot name="after-viewer" />
-        </div>
-        <slot name="after-viewer-container" />
-
+    <div class="pdf-viewer" role="document" tabindex="0">
         <div ref="viewerControls" class="controls">
-            <div class="pages">
+            <div class="pages" role="status" aria-live="polite">
                 {{ props.translate('page') }}
                 <span class="current">{{ state.currentPage }}</span>
                 {{ props.translate('pageOf') }}
@@ -195,19 +187,33 @@ onUnmounted(() => {
             </div>
 
             <div class="actions">
-                <div class="scale">
-                    <div v-if="state.showPageFitButton" class="action-button" @click="pageFit">
-                        <CIcon :icon="iconFit" />
-                    </div>
-                    <div class="action-button" @click="decreaseScale">
-                        <CIcon :icon="iconMinus" />
-                    </div>
-                    <div class="action-button" @click="increaseScale">
-                        <CIcon :icon="iconPlus" />
-                    </div>
+                <div class="scale" role="group" :aria-label="props.translate('zoomControls')">
+                    <button v-if="state.showPageFitButton"
+                        class="action-button"
+                        :aria-label="props.translate('fitToPage')"
+                        @click="pageFit">
+                        <CIcon :icon="iconFit" aria-hidden="true" />
+                    </button>
+                    <button class="action-button"
+                        :aria-label="props.translate('zoomOut')"
+                        @click="decreaseScale">
+                        <CIcon :icon="iconMinus" aria-hidden="true" />
+                    </button>
+                    <button class="action-button"
+                        :aria-label="props.translate('zoomIn')"
+                        @click="increaseScale">
+                        <CIcon :icon="iconPlus" aria-hidden="true" />
+                    </button>
                 </div>
             </div>
         </div>
+        <slot name="before-viewer-container" />
+        <div ref="viewerContainer" class="viewer-container">
+            <slot name="before-viewer" />
+            <div ref="viewer" class="pdfViewer" />
+            <slot name="after-viewer" />
+        </div>
+        <slot name="after-viewer-container" />
     </div>
 </template>
 
@@ -269,6 +275,7 @@ onUnmounted(() => {
                 width: 2.5rem;
                 height: 2.5rem;
                 border-radius: 50%;
+                border: none;
                 padding: 0.5rem;
                 background: var(--pdfviewer-color-controls-background);
                 color: var(--pdfviewer-color-controls-font);
