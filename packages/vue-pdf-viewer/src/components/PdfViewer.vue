@@ -6,12 +6,11 @@ import {
     PdfJsHelper,
     Scale,
     type ScaleChangeEvent,
-} from '../pdf/PdfJsHelper'
-import { iconPlus, iconFit, iconMinus } from '../icons'
+} from '../pdf/PdfJsHelper.ts'
+import { iconFit, iconMinus, iconPlus } from '../icons'
 import CIcon from './CIcon.vue'
-import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
-import type { PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
-import type { PDFPageView, PDFViewer } from 'pdfjs-dist/types/web/pdf_viewer.component'
+import type { PDFDocumentProxy } from 'pdfjs-dist'
+import type { PDFPageView, PDFViewer, PDFViewerOptions } from 'pdfjs-dist/web/pdf_viewer.mjs'
 
 interface PropsBase {
     source: string | Uint8Array | PDFDocumentProxy | undefined
