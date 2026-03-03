@@ -25,7 +25,7 @@ This monorepo contains these packages:
 
 ### Requirements
 
-* [NodeJS](https://nodejs.org) >= 22
+* [NodeJS](https://nodejs.org) >= 25
 
 ### Getting started
 

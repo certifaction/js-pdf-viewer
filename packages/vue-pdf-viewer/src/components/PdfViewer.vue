@@ -188,20 +188,17 @@ onUnmounted(() => {
 
             <div class="actions">
                 <div class="scale" role="group" :aria-label="props.translate('zoomControls')">
-                    <button v-if="state.showPageFitButton"
+                    <button
+                        v-if="state.showPageFitButton"
                         class="action-button"
                         :aria-label="props.translate('fitToPage')"
                         @click="pageFit">
                         <CIcon :icon="iconFit" aria-hidden="true" />
                     </button>
-                    <button class="action-button"
-                        :aria-label="props.translate('zoomOut')"
-                        @click="decreaseScale">
+                    <button class="action-button" :aria-label="props.translate('zoomOut')" @click="decreaseScale">
                         <CIcon :icon="iconMinus" aria-hidden="true" />
                     </button>
-                    <button class="action-button"
-                        :aria-label="props.translate('zoomIn')"
-                        @click="increaseScale">
+                    <button class="action-button" :aria-label="props.translate('zoomIn')" @click="increaseScale">
                         <CIcon :icon="iconPlus" aria-hidden="true" />
                     </button>
                 </div>
@@ -274,8 +271,8 @@ onUnmounted(() => {
                 cursor: pointer;
                 width: 2.5rem;
                 height: 2.5rem;
-                border-radius: 50%;
                 border: none;
+                border-radius: 50%;
                 padding: 0.5rem;
                 background: var(--pdfviewer-color-controls-background);
                 color: var(--pdfviewer-color-controls-font);
