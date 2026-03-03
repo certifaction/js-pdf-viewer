@@ -265,7 +265,7 @@ export default {
             throw error
         }
     },
-    beforeUnmount() {
+    beforeDestroy() {
         this.removeFormEventListeners()
 
         if (this.pdfViewer) {
