@@ -6,12 +6,11 @@ import {
     PdfJsHelper,
     Scale,
     type ScaleChangeEvent,
-} from '../pdf/PdfJsHelper'
-import { iconPlus, iconFit, iconMinus } from '../icons'
+} from '../pdf/PdfJsHelper.ts'
+import { iconFit, iconMinus, iconPlus } from '../icons'
 import CIcon from './CIcon.vue'
-import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/pdf'
-import type { PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
-import type { PDFPageView, PDFViewer } from 'pdfjs-dist/types/web/pdf_viewer.component'
+import type { PDFDocumentProxy } from 'pdfjs-dist'
+import type { PDFPageView, PDFViewer, PDFViewerOptions } from 'pdfjs-dist/web/pdf_viewer.mjs'
 
 interface PropsBase {
     source: string | Uint8Array | PDFDocumentProxy | undefined
@@ -188,20 +187,17 @@ onUnmounted(() => {
 
             <div class="actions">
                 <div class="scale" role="group" :aria-label="props.translate('zoomControls')">
-                    <button v-if="state.showPageFitButton"
+                    <button
+                        v-if="state.showPageFitButton"
                         class="action-button"
                         :aria-label="props.translate('fitToPage')"
                         @click="pageFit">
                         <CIcon :icon="iconFit" aria-hidden="true" />
                     </button>
-                    <button class="action-button"
-                        :aria-label="props.translate('zoomOut')"
-                        @click="decreaseScale">
+                    <button class="action-button" :aria-label="props.translate('zoomOut')" @click="decreaseScale">
                         <CIcon :icon="iconMinus" aria-hidden="true" />
                     </button>
-                    <button class="action-button"
-                        :aria-label="props.translate('zoomIn')"
-                        @click="increaseScale">
+                    <button class="action-button" :aria-label="props.translate('zoomIn')" @click="increaseScale">
                         <CIcon :icon="iconPlus" aria-hidden="true" />
                     </button>
                 </div>
@@ -274,8 +270,8 @@ onUnmounted(() => {
                 cursor: pointer;
                 width: 2.5rem;
                 height: 2.5rem;
-                border-radius: 50%;
                 border: none;
+                border-radius: 50%;
                 padding: 0.5rem;
                 background: var(--pdfviewer-color-controls-background);
                 color: var(--pdfviewer-color-controls-font);
