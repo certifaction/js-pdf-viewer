@@ -9,19 +9,17 @@
             </div>
             <div class="actions">
                 <div class="scale" role="group" :aria-label="_$t('pdfViewer.zoomControls')">
-                    <button v-if="showPageFitButton" class="action-button"
+                    <button
+                        v-if="showPageFitButton"
+                        class="action-button"
                         :aria-label="_$t('pdfViewer.fitToPage')"
                         @click="pageFit">
                         <CIcon :icon="iconExpand" aria-hidden="true" />
                     </button>
-                    <button class="action-button" 
-                        :aria-label="_$t('pdfViewer.zoomOut')"
-                        @click="decreaseScale">
+                    <button class="action-button" :aria-label="_$t('pdfViewer.zoomOut')" @click="decreaseScale">
                         <CIcon :icon="iconMinus" aria-hidden="true" />
                     </button>
-                    <button class="action-button"
-                        :aria-label="_$t('pdfViewer.zoomIn')"
-                        @click="increaseScale">
+                    <button class="action-button" :aria-label="_$t('pdfViewer.zoomIn')" @click="increaseScale">
                         <CIcon :icon="iconPlus" aria-hidden="true" />
                     </button>
                 </div>
@@ -267,7 +265,7 @@ export default {
             throw error
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.removeFormEventListeners()
 
         if (this.pdfViewer) {
