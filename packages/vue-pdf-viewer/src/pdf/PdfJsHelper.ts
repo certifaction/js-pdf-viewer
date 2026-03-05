@@ -53,7 +53,9 @@ export class PdfJsHelper {
                 typeof globalThis.Promise?.withResolvers !== 'function' ||
                 typeof globalThis.URL?.parse !== 'function' ||
                 // @ts-expect-error: Uint8Array.prototype.toHex is potentially unavailable
-                typeof globalThis.Uint8Array?.prototype?.toHex !== 'function'
+                typeof globalThis.Uint8Array?.prototype?.toHex !== 'function' ||
+                // @ts-expect-error: Map.prototype.getOrInsertComputed is potentially unavailable
+                typeof globalThis.Map?.prototype?.getOrInsertComputed !== 'function'
         }
         this.#cMapUrl = cMapUrl
         this.#iccUrl = iccUrl
