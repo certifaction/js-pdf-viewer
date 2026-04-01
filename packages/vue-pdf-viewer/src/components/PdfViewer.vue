@@ -220,6 +220,7 @@ onUnmounted(() => {
     --page-border: 0.5rem solid transparent;
     --pdfviewer-color-controls-font: var(--c-color-grey-600);
     --pdfviewer-color-controls-background: var(--c-color-grey-200);
+
     position: relative;
 
     .viewer-container {
@@ -229,12 +230,14 @@ onUnmounted(() => {
         height: 100%;
         background-color: var(--c-color-grey-50);
 
+        /* stylelint-disable-next-line selector-class-pattern */
         .pdfViewer {
             position: relative;
 
             .page {
                 box-sizing: content-box;
 
+                /* stylelint-disable-next-line selector-class-pattern */
                 .canvasWrapper {
                     box-shadow: var(--c-drop-shadow);
                 }
@@ -278,10 +281,7 @@ onUnmounted(() => {
 
                 .c-icon {
                     position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
+                    inset: 0;
                     width: 1.25rem;
                     margin: auto;
                 }
