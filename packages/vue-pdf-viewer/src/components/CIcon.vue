@@ -33,6 +33,6 @@ const svgAttributes = computed(() => {
 <style lang="scss">
 .c-icon {
     height: auto;
-    fill: currentColor;
+    fill: currentcolor;
 }
 </style>

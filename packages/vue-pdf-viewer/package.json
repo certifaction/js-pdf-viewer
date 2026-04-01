@@ -15,15 +15,15 @@
         "type-check": "vue-tsc --build --force"
     },
     "dependencies": {
-        "pdfjs-dist": "^5.5.207"
+        "pdfjs-dist": "^5.6.205"
     },
     "peerDependencies": {
         "vue": "^3.5"
     },
     "devDependencies": {
-        "@types/jsdom": "^28.0.0",
-        "jsdom": "^28.1.0",
-        "vue": "^3.5.29",
-        "vue-tsc": "^3.2.5"
+        "@types/jsdom": "^28.0.1",
+        "jsdom": "^29.0.1",
+        "vue": "^3.5.31",
+        "vue-tsc": "^3.2.6"
     }
 }
