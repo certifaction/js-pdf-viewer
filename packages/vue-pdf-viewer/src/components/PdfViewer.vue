@@ -9,8 +9,8 @@ import {
 } from '../pdf/PdfJsHelper.ts'
 import { iconFit, iconMinus, iconPlus } from '../icons'
 import CIcon from './CIcon.vue'
-import type { PDFDocumentProxy } from 'pdfjs-dist'
-import type { PDFPageView, PDFViewer, PDFViewerOptions } from 'pdfjs-dist/web/pdf_viewer.mjs'
+import type { PDFDocumentProxy, PDFViewer, PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
+import type { PDFPageView } from 'pdfjs-dist/types/web/pdf_viewer.component'
 
 interface PropsBase {
     source: string | Uint8Array | PDFDocumentProxy | undefined
