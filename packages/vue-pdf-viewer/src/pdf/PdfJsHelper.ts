@@ -1,5 +1,5 @@
-import { type PDFDocumentProxy, type DocumentInitParameters } from 'pdfjs-dist'
-import { type PDFViewer as PDFViewerType, type PDFViewerOptions } from 'pdfjs-dist/web/pdf_viewer.mjs'
+import type { PDFDocumentProxy, PDFViewer as PDFViewerType, PDFViewerOptions } from 'pdfjs-dist/types/web/pdf_viewer'
+import type { DocumentInitParameters } from 'pdfjs-dist/types/src/display/api'
 
 export enum Scale {
     Auto = 'auto',
