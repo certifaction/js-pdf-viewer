@@ -157,9 +157,17 @@ export default {
                 return
             }
 
-            if (this.formFieldsToListen.some((f) => !f.pushButton)) {
-                this.$emit('required-fields-filled', false)
-            }
+            this.formFieldsToListen.forEach((formField) => {
+                if (formField.pushButton) {
+                    return
+                }
+                this.$set(this.requiredFormFieldsFilled, formField.id, {
+                    fieldName: formField.fieldName,
+                    fieldValue: this.pdfJsHelper.getInitialFieldValue(formField),
+                })
+            })
+
+            await this.emitRequiredFieldsFilled()
 
             this.pdfViewer.eventBus.on('annotationlayerrendered', this.handleAnnotationLayerRendered)
             this.handleAnnotationLayerRendered()
@@ -206,19 +214,12 @@ export default {
                     element: htmlElement,
                     listener,
                     eventType,
-                    pushButton: formField.pushButton,
                 }
             })
 
             this.emitRequiredFieldsFilled()
         },
         async emitRequiredFieldsFilled() {
-            const requiredCount = this.formFieldsToListen.filter((f) => !f.pushButton).length
-            const boundRequiredCount = Object.values(this.formEventListeners).filter((l) => !l.pushButton).length
-            if (boundRequiredCount < requiredCount) {
-                this.$emit('required-fields-filled', false)
-                return
-            }
             const allFilled = await this.pdfJsHelper.allRequiredFieldsFilled(this.transformedRequiredFormFieldsFilled)
             this.$emit('required-fields-filled', allFilled)
         },
