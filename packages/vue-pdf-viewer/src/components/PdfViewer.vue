@@ -150,12 +150,10 @@ export default {
             window.dispatchEvent(event)
         },
         async prepareRequiredFormFields() {
-            this.pdfViewer.eventBus.on('annotationlayerrendered', this.handleAnnotationLayerRendered)
-
             this.formFieldsToListen = await this.pdfJsHelper.getFormFieldsToListen(this.pdfDocument)
 
             if (this.formFieldsToListen.length === 0) {
-                this.pdfViewer.eventBus.off('annotationlayerrendered', this.handleAnnotationLayerRendered)
+                this.$emit('required-fields-filled', true)
                 return
             }
 
@@ -163,6 +161,7 @@ export default {
                 this.$emit('required-fields-filled', false)
             }
 
+            this.pdfViewer.eventBus.on('annotationlayerrendered', this.handleAnnotationLayerRendered)
             this.handleAnnotationLayerRendered()
         },
         handleAnnotationLayerRendered() {
