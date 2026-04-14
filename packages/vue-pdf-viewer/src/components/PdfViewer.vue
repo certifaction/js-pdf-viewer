@@ -99,6 +99,7 @@ export default {
             currentPage: 1,
             showPageFitButton: false,
             requiredFormFieldsFilled: {},
+            formEventListeners: {},
             formFieldsToListen: [],
         }
     },
@@ -255,8 +256,6 @@ export default {
         },
     },
     created() {
-        this.formEventListeners = {}
-
         if (this.parentPdfJsHelper) {
             this.pdfJsHelper = this.parentPdfJsHelper
         } else {
