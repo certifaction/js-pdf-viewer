@@ -192,6 +192,26 @@ export class PdfJsHelper {
     }
 
     /**
+     * @param {Object} annotation
+     * @returns {string | boolean}
+     */
+    getInitialFieldValue(annotation) {
+        if (annotation.fieldType === 'Btn') {
+            if (annotation.checkBox) {
+                return annotation.fieldValue != null && annotation.fieldValue !== 'Off'
+            }
+            if (annotation.radioButton) {
+                return (
+                    annotation.fieldValue != null &&
+                    (annotation.fieldValue === annotation.buttonValue ||
+                        annotation.fieldValue === annotation.exportValue)
+                )
+            }
+        }
+        return annotation.fieldValue ?? ''
+    }
+
+    /**
      * @param {RequiredField[]} requiredFields
      * @returns {Promise<boolean>}
      */
