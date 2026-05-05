@@ -13,7 +13,7 @@
         "/src"
     ],
     "dependencies": {
-        "pdfjs-dist": "^5.6.205"
+        "pdfjs-dist": "^5.7.284"
     },
     "peerDependencies": {
         "vue": "^2.7",

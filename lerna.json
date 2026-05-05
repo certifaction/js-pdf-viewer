@@ -1,18 +1,14 @@
 {
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "version": "1.26.1",
-  "packages": [
-    "packages/*"
-  ],
-  "command": {
-    "version": {
-      "ignoreChanges": [
-        "*.md"
-      ],
-      "includeMergedTags": true
-    },
-    "publish": {
-      "registry": "https://npm.pkg.github.com"
+    "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+    "version": "1.26.1",
+    "npmClient": "pnpm",
+    "command": {
+        "version": {
+            "ignoreChanges": ["*.md"],
+            "includeMergedTags": true
+        },
+        "publish": {
+            "registry": "https://npm.pkg.github.com"
+        }
     }
-  }
 }
