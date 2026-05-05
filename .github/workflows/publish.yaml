@@ -20,18 +20,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Extract Node version
+      - name: Setup environment
+        uses: jdx/mise-action@v4
+
+      - name: Get pnpm store directory
+        id: pnpm-store-dir
+        shell: bash
         run: |
-          NODE_VERSION=$(node -p "require('./package.json').volta.node")
-          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
+          echo "dir=$(pnpm store path --silent)" >> ${GITHUB_OUTPUT}
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v6
+      - name: pnpm cache
+        uses: actions/cache@v5
+        id: pnpm-cache
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          path: ${{ steps.pnpm-store-dir.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/mise.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-      - name: Extract version
+      - name: Extract package version
         run: |
           PACKAGE_VERSION=$(node -p "require('./lerna.json').version")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
@@ -46,13 +53,20 @@ jobs:
           git tag -a v${{ env.PACKAGE_VERSION }} -m "Release v${{ env.PACKAGE_VERSION }}"
           git push --tags
 
+      - name: Run prepare-ci
+        run: |
+          pnpm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
+          pnpm install --frozen-lockfile
+
       - name: Publish to GitHub Packages
         run: |
-          npm config set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
+          # Lerna always uses npm tooling to publish packages, regardless of the npmClient set in the lerna.json file.
+          # https://lerna.js.org/docs/troubleshooting#publishing-to-a-private-npm-registry-artifactory-npm-enterprise-etc
+          npm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
           if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} == true ]; then
-              npx lerna publish from-package --dist-tag v1-next --yes
+              pnpm exec lerna publish from-package --dist-tag v1-next --yes
           else
-              npx lerna publish from-package --dist-tag v1-latest --yes
+              pnpm exec lerna publish from-package --dist-tag v1-latest --yes
           fi
 
       - name: Create GitHub release
