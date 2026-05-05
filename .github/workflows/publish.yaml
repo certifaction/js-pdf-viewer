@@ -48,15 +48,15 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: Create Git tag
-        run: |
-          git tag -a v${{ env.PACKAGE_VERSION }} -m "Release v${{ env.PACKAGE_VERSION }}"
-          git push --tags
-
       - name: Run prepare-ci
         run: |
           pnpm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
           pnpm install --frozen-lockfile
+
+      - name: Create Git tag
+        run: |
+          git tag -a v${{ env.PACKAGE_VERSION }} -m "Release v${{ env.PACKAGE_VERSION }}"
+          git push --tags
 
       - name: Publish to GitHub Packages
         run: |
