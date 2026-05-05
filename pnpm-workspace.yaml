@@ -1,0 +1,10 @@
+packages:
+  - './packages/*'
+allowBuilds:
+  nx: false
+  unrs-resolver: false
+lockfileIncludeTarballUrl: true
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - '@certifaction/*'
+shamefullyHoist: true
