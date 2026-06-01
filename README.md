@@ -25,7 +25,7 @@ This monorepo contains these packages:
 
 ### Requirements
 
-* [NodeJS](https://nodejs.org) >= 25
+* [NodeJS](https://nodejs.org) >= 26
 
 ### Getting started
 
@@ -33,24 +33,19 @@ Clone the git repo and install dependencies.
 ```shell script
 git clone https://github.com/certifaction/js-pdf-viewer.git
 cd js-pdf-viewer
-npm install
+pnpm install
 ```
 
 Check and fix linting errors
 ```shell script
-npm run lint
-```
-
-Build libraries
-```shell script
-npm run build
+pnpm run lint
 ```
 
 ### Create new release / publish to GitHub Packages
 
 1. Create release branch (has to start with `releases/`). It's best to name the branch according to the version you want to release (ex. `releases/v1.2.3`, or `releases/v2.0.0-rc.0`). The branch name isn't used for the actual release tough.
 
-2. Execute `npm run create-version` and follow the prompts. You can use `npm run force-create-version` to force a new version to be published.
+2. Execute `pnpm run create-version` and follow the prompts. You can use `pnpm run force-create-version` to force a new version to be published.
 
 3. Commit and push the changes created by Lerna.
 
