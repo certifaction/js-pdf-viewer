@@ -19,7 +19,7 @@ PDF-Viewer for Vue.js based on Mozillas PDF.js
 ### As NPM package
 
 ```shell script
-npm install @certifaction/vue-pdf-viewer
+pnpm install @certifaction/vue-pdf-viewer
 ```
 
 ## Usage
