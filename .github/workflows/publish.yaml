@@ -51,12 +51,13 @@ jobs:
       - name: Run prepare-ci
         run: |
           pnpm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
-          pnpm install --frozen-lockfile
+          pnpm ci
 
       - name: Create Git tag
         run: |
-          git tag -a v${{ env.PACKAGE_VERSION }} -m "Release v${{ env.PACKAGE_VERSION }}"
-          git push --tags
+          TAG="v${PACKAGE_VERSION}"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
 
       - name: Publish to GitHub Packages
         run: |
