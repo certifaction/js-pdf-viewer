@@ -53,7 +53,8 @@ export class PdfJsHelper {
                 typeof globalThis.Promise?.withResolvers !== 'function' ||
                 typeof globalThis.URL?.parse !== 'function' ||
                 typeof globalThis.Uint8Array?.prototype?.toHex !== 'function' ||
-                typeof globalThis.Map?.prototype?.getOrInsertComputed !== 'function'
+                typeof globalThis.Map?.prototype?.getOrInsertComputed !== 'function' ||
+                typeof globalThis.AbortSignal?.any !== 'function'
         }
         this.#cMapUrl = cMapUrl
         this.#iccUrl = iccUrl

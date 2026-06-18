@@ -1,5 +1,9 @@
 [settings]
 lockfile = true
+minimum_release_age = "24h"
+
+[settings.npm]
+package_manager = "pnpm"
 
 [tools]
 node = "latest"
