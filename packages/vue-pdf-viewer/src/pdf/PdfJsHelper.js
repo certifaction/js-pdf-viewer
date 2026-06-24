@@ -223,7 +223,11 @@ export class PdfJsHelper {
             // Groups like choices have the same fieldName, so there just one needs to be selected
             const sameFieldNameFields = requiredFields.filter((ff) => ff.fieldName === requiredField.fieldName)
             const isEmpty = sameFieldNameFields.every(
-                (ff) => ff.fieldValue === null || ff.fieldValue === false || ff.fieldValue === '',
+                (ff) =>
+                    ff.fieldValue === null ||
+                    ff.fieldValue === false ||
+                    ff.fieldValue === '' ||
+                    (Array.isArray(ff.fieldValue) && ff.fieldValue.length === 0),
             )
             if (isEmpty) {
                 hasEmptyRequiredFields = true
