@@ -17,17 +17,17 @@
         "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && pnpm install"
     },
     "devDependencies": {
-        "@certifaction/prettier-config": "^18.0.2",
+        "@certifaction/prettier-config": "^19.0.0",
         "@eslint/js": "^10.0.1",
-        "@prettier/plugin-oxc": "^0.1.4",
-        "eslint": "^10.5.0",
+        "@prettier/plugin-oxc": "^0.2.0",
+        "eslint": "^10.6.0",
         "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-oxlint": "^1.70.0",
+        "eslint-plugin-oxlint": "^1.71.0",
         "eslint-plugin-vue": "^10.9.2",
-        "globals": "^17.6.0",
+        "globals": "^17.7.0",
         "lerna": "^9.0.7",
         "npm-run-all2": "^9.0.2",
-        "oxlint": "^1.70.0",
-        "prettier": "^3.8.4"
+        "oxlint": "^1.71.0",
+        "prettier": "^3.9.1"
     }
 }
