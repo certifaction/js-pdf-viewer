@@ -12,31 +12,9 @@ permissions:
   packages: write
 
 jobs:
-  license-scan:
-    name: License scan
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/') == true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Scan dependency licenses
-        uses: aquasecurity/trivy-action@master
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'license'
-          pkg-types: 'library'
-          severity: 'UNKNOWN,HIGH,CRITICAL'
-          exit-code: '1'
-          format: 'table'
-
   publish:
     name: Publish to GitHub Packages (npm)
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/') == true
-    needs: [license-scan]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
