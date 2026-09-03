@@ -1,0 +1,60 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  license-scan:
+    name: License scan
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup environment
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+
+      - name: Get pnpm store directory
+        id: pnpm-store-dir
+        shell: bash
+        run: |
+          echo "dir=$(pnpm store path --silent)" >> "${GITHUB_OUTPUT}"
+
+      - name: pnpm cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: pnpm-cache
+        with:
+          path: ${{ steps.pnpm-store-dir.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/mise.lock', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Trivy reads npm dependency licenses from the installed packages, so
+      # node_modules has to exist before the scan. Without this the scan finds
+      # no packages at all.
+      - name: Install dependencies
+        run: |
+          pnpm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
+          pnpm install --frozen-lockfile
+
+      - name: Scan dependency licenses
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'license'
+          vuln-type: 'library'
+          severity: 'UNKNOWN,HIGH,CRITICAL'
+          exit-code: '1'
+          format: 'table'
