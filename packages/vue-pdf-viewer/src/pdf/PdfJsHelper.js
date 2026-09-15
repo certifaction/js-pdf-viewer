@@ -142,12 +142,12 @@ export class PdfJsHelper {
             isAcroFormPresent = true
         }
 
+        const fieldGroups = formFields ? [...formFields.values()] : []
+
         // Check if there are fields and if some are not signatures
         return (
             isAcroFormPresent &&
-            Object.values(formFields ?? {}).some((arr) =>
-                arr.some((field) => 'type' in field && field.type !== 'signature'),
-            )
+            fieldGroups.some((arr) => arr.some((field) => 'type' in field && field.type !== 'signature'))
         )
     }
 
