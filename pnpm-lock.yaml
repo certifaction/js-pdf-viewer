@@ -2151,8 +2151,8 @@ packages:
       '@types/node':
         optional: true
 
-  ip-address@10.7.3:
-    resolution: {integrity: sha512-A1kdq/tSb5QjvKvAMgIoEvDBIgL7qaqVP/jkvSwYYRZ9iEzvPpopxp2wQfu3SuZRHtpHNxMn8Fs0bS+gf5Xmwg==}
+  ip-address@10.7.4:
+    resolution: {integrity: sha512-DWBMKyeM25D70nrIiTkgQth59/G+naKOTep6huF9j+GmeK3DMD60Zvxg5d5qQnz+38AHgou6ean2LECX+lrKDg==}
     engines: {node: '>= 12'}
 
   is-arrayish@0.2.1:
@@ -5420,7 +5420,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.6.5
 
-  ip-address@10.7.3: {}
+  ip-address@10.7.4: {}
 
   is-arrayish@0.2.1: {}
 
@@ -6350,7 +6350,7 @@ snapshots:
 
   socks@2.8.10:
     dependencies:
-      ip-address: 10.7.3
+      ip-address: 10.7.4
       smart-buffer: 4.2.0
 
   source-map-js@1.2.2: {}
