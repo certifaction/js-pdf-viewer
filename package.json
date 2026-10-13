@@ -20,7 +20,7 @@
     },
     "devDependencies": {
         "@certifaction/vue3-webapp-config": "^19.3.0",
-        "lerna": "^10.0.1",
+        "lerna": "^10.1.0",
         "npm-run-all2": "^9.0.3"
     }
 }
