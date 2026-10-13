@@ -22,12 +22,12 @@
         "@prettier/plugin-oxc": "^0.2.3",
         "eslint": "^10.12.0",
         "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-oxlint": "^1.86.0",
+        "eslint-plugin-oxlint": "^1.87.0",
         "eslint-plugin-vue": "^10.11.1",
         "globals": "^17.13.0",
-        "lerna": "^10.0.1",
+        "lerna": "^10.1.0",
         "npm-run-all2": "^9.0.3",
-        "oxlint": "^1.86.0",
-        "prettier": "^3.9.9"
+        "oxlint": "^1.87.0",
+        "prettier": "^3.9.10"
     }
 }
