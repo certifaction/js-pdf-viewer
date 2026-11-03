@@ -14,8 +14,8 @@ permissions:
 jobs:
   publish:
     name: Publish to GitHub Packages (npm)
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/') == true
-    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/') == true }}
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -28,18 +28,13 @@ jobs:
 
       - name: Extract package version
         run: |
-          PACKAGE_VERSION=$(node -p "require('./lerna.json').version")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: Configure Git user
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-
-      - name: Run prepare-ci
-        run: |
-          pnpm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
-          pnpm ci
 
       - name: Create Git tag
         run: |
@@ -49,13 +44,11 @@ jobs:
 
       - name: Publish to GitHub Packages
         run: |
-          # Lerna always uses npm tooling to publish packages, regardless of the npmClient set in the lerna.json file.
-          # https://lerna.js.org/docs/troubleshooting#publishing-to-a-private-npm-registry-artifactory-npm-enterprise-etc
-          npm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
+          pnpm config set "//npm.pkg.github.com/:_authToken=${{ github.token }}"
           if [ ${{ contains(env.PACKAGE_VERSION, '-') == true }} == true ]; then
-              pnpm exec lerna publish from-package --dist-tag next --yes
+              pnpm publish --tag next
           else
-              pnpm exec lerna publish from-package --dist-tag latest --yes
+              pnpm publish
           fi
 
       - name: Create GitHub release
