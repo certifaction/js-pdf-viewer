@@ -1,6 +1,7 @@
 {
-    "name": "@certifaction/js-pdf-viewer",
-    "private": true,
+    "name": "@certifaction/vue-pdf-viewer",
+    "version": "1.32.0",
+    "description": "PDF-Viewer for Vue.js based on Mozillas PDF.js",
     "type": "module",
     "repository": {
         "type": "git",
@@ -9,12 +10,22 @@
     "publishConfig": {
         "registry": "https://npm.pkg.github.com"
     },
+    "main": "src/index.js",
+    "files": [
+        "/src"
+    ],
     "scripts": {
         "lint:oxlint": "oxlint .",
         "lint:eslint": "eslint . --cache",
         "lint": "run-s lint:*",
-        "create-version": "lerna version --no-git-tag-version --no-push && pnpm install",
-        "force-create-version": "lerna version --force-publish --no-git-tag-version --no-push && pnpm install"
+        "create-version": "pnpm version --no-git-tag-version"
+    },
+    "dependencies": {
+        "pdfjs-dist": "^6.5.438"
+    },
+    "peerDependencies": {
+        "vue": "^2.7",
+        "vue-i18n": "^8.28"
     },
     "devDependencies": {
         "@certifaction/prettier-config": "^19.0.0",
@@ -25,9 +36,9 @@
         "eslint-plugin-oxlint": "^1.90.0",
         "eslint-plugin-vue": "^10.12.0",
         "globals": "^17.14.0",
-        "lerna": "^10.1.1",
         "npm-run-all2": "^9.0.4",
         "oxlint": "^1.90.0",
-        "prettier": "^3.9.10"
+        "prettier": "^3.9.10",
+        "vue": "^2.7.16"
     }
 }
