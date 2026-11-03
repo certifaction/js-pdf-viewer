@@ -22,21 +22,9 @@ jobs:
 
       - name: Setup environment
         uses: jdx/mise-action@v5
-
-      - name: Get pnpm store directory
-        id: pnpm-store-dir
-        shell: bash
-        run: |
-          echo "dir=$(pnpm store path --silent)" >> ${GITHUB_OUTPUT}
-
-      - name: pnpm cache
-        uses: actions/cache@v6
-        id: pnpm-cache
+        # No caches in release jobs, to prevent cache poisoning.
         with:
-          path: ${{ steps.pnpm-store-dir.outputs.dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/mise.lock', '**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          cache: false
 
       - name: Extract package version
         run: |
